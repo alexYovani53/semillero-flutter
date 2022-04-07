@@ -122,12 +122,11 @@ class _PageLoginState extends State<PageLogin> {
                                       if ( controllerCorreo.text != "alexyovani53@gmail.com" || controllerContrasena.text != "1234"){
                                         showAlertDialog(context); 
                                       }else{
-                                        BlocProvider.of<BasicBloc>(context).add(ButtonPressed());
+                                        BlocProvider.of<BasicBloc>(context).add(LoginEvent(data: controllerCorreo.text));
                                       }
 
                                     }
-
-                                    
+                                   
                                     controllerCorreo.text = "";
                                     controllerContrasena.text ="";
 
