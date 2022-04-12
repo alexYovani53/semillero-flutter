@@ -4,6 +4,7 @@ import 'package:applogin/pages/page_two/page_two.dart';
 import 'package:applogin/widgets/button_green.dart';
 import 'package:applogin/widgets/gradient_back.dart';
 import 'package:applogin/widgets/text_input.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:validators/validators.dart';
@@ -116,10 +117,18 @@ class _PageLoginState extends State<PageLogin> {
                               
                               ButtonGreen(
                                 texto: "Login", 
-                                onPressed: (){
+                                onPressed: ()async{
                                     if (formKey.currentState!.validate()){
+                                      
+                                      bool dato = await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-                                      if ( controllerCorreo.text != "alexyovani53@gmail.com" || controllerContrasena.text != "1234"){
+                                      String contrasena   = FirebaseRemoteConfig.instance.getString("contrasena");
+                                      String correo   = FirebaseRemoteConfig.instance.getString("correo");
+                                  
+
+                                      print({"contra":contrasena,"correo: ":correo});
+
+                                      if ( controllerCorreo.text != correo || controllerContrasena.text != contrasena){
                                         showAlertDialog(context); 
                                       }else{
                                         BlocProvider.of<BasicBloc>(context).add(LoginEvent(data: controllerCorreo.text));
