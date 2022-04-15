@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class GradientBack extends StatelessWidget {
 
-  String title = "Popular";
+  String? title;
   double? height;
   
   GradientBack({ 
     Key? key,
-    this.title="",
+    this.title,
     this.height }) : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class GradientBack extends StatelessWidget {
     height ??= screenHeight;
 
     return Container(
-      height: screenHeight,
+      height: height,
       decoration: const BoxDecoration(
         gradient:  LinearGradient(
             stops: [

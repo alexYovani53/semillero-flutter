@@ -1,7 +1,12 @@
 
 import 'package:applogin/bloc/basic_bloc.dart';
-import 'package:applogin/pages/page_two/page_two.dart';
+import 'package:applogin/model/usuario/usuario_list.dart';
+import 'package:applogin/pages/page_data/page_data.dart';
+import 'package:applogin/pages/page_error/page_error.dart';
+import 'package:applogin/provider/api_manager.dart';
+import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/button_green.dart';
+import 'package:applogin/widgets/cupertino_bar.dart';
 import 'package:applogin/widgets/gradient_back.dart';
 import 'package:applogin/widgets/text_input.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -88,7 +93,8 @@ class _PageLoginState extends State<PageLogin> {
                     break;
                   case PageChanged:
                     final estado = state as PageChanged;
-                    Navigator.push(context, MaterialPageRoute(builder: (cxt) => PageTwo(title: estado.title)));
+                    //Navigator.push(context, MaterialPageRoute(builder: (cxt) => PageError(title: estado.title)));
+                    Navigator.push(context, MaterialPageRoute(builder: (cxt) => CuppertinoBar()));
                     break;
                 }
               },
@@ -120,7 +126,7 @@ class _PageLoginState extends State<PageLogin> {
                                 onPressed: ()async{
                                     if (formKey.currentState!.validate()){
                                       
-                                      bool dato = await FirebaseRemoteConfig.instance.fetchAndActivate();
+                                      
 
                                       String contrasena   = FirebaseRemoteConfig.instance.getString("contrasena");
                                       String correo   = FirebaseRemoteConfig.instance.getString("correo");
@@ -128,7 +134,11 @@ class _PageLoginState extends State<PageLogin> {
 
                                       print({"contra":contrasena,"correo: ":correo});
 
-                                      if ( controllerCorreo.text != correo || controllerContrasena.text != contrasena){
+                                      bool login = await ejecutarLogin(controllerCorreo.text, controllerContrasena.text );
+                                      print(">>>>>>>>>>>>>>>>>>>>>>Respuesta de servidor");
+                                      print(login);
+
+                                      if (!login){
                                         showAlertDialog(context); 
                                       }else{
                                         BlocProvider.of<BasicBloc>(context).add(LoginEvent(data: controllerCorreo.text));
@@ -144,6 +154,7 @@ class _PageLoginState extends State<PageLogin> {
                             ],
                           ),
                         ),
+                      
                       )
                     ],
                   );
@@ -152,6 +163,24 @@ class _PageLoginState extends State<PageLogin> {
             ),
           ),
         );
+
+  }
+
+  Future<bool> ejecutarLogin(String correo, String password) async {
+
+    Map<String,dynamic> parametros = <String,dynamic>{"correo":correo,"password":password} ;
+    //parametros["correo"] = correo;
+    //parametros["password"] = password;
+
+
+    final data =  await ApiManager.shared.request(baseUrl: '3.19.244.228:8585', uri: 'usuario/login', type: HttpType.GET,uriParams:parametros);
+    final lista = UsuarioList.fromList(data);
+
+    if (lista.usuarios.isEmpty){
+      return false;
+    }
+
+    return true;
 
   }
 }

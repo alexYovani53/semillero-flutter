@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:applogin/pages/page_login/PageLogin.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -33,12 +35,31 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initiliazeFB() async{
     await Firebase.initializeApp();
-    await initiliazeC();
-    await initiliazeRC();
-    await initiliazeCM();
+    await initiliazeCrashlytics();
+    await initiliazeRemoteConfig();
+    await initiliazeCloudMessage();
+    await initializeRealTime();
   }
 
-  Future<void> initiliazeC() async{
+  Future<void> initializeRealTime() async {
+    print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>inicio');
+    FirebaseDatabase database = FirebaseDatabase.instance;
+
+        DatabaseReference ref = database.ref("mode");
+        ref.onValue.listen((DatabaseEvent event) {  
+          final data = event.snapshot.child("theme").value as String;
+
+          if (data == "claro"){
+            MyApp.themeNotifier.value = ThemeMode.light;
+          }else{
+            MyApp.themeNotifier.value = ThemeMode.dark;
+          }
+          
+          print("el valor de la data es ${data}");
+        });
+  }
+
+  Future<void> initiliazeCrashlytics() async{
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
     FlutterError.onError = (FlutterErrorDetails errorDetails) async{
@@ -47,17 +68,21 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-  Future<void> initiliazeRC() async{
+  Future<void> initiliazeRemoteConfig() async{
     FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
     //remoteConfig.setDefaults({'contrasena':1234});
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: Duration(seconds:10),
+      minimumFetchInterval:Duration.zero
+    ));
+    await remoteConfig.fetchAndActivate();
+
   }
 
-  Future<void> initiliazeCM() async{
+  Future<void> initiliazeCloudMessage() async{
     FirebaseMessaging cloudMessagin = FirebaseMessaging.instance;
 
     String token = await cloudMessagin.getToken()??"";
-
-
       print(">>>>>>>>>>>>>>>>>>>>>>>>El token para esta app es: ");
       print(token);
 
@@ -74,7 +99,7 @@ class _MyAppState extends State<MyApp> {
           exception: "Recibio mensaje y genero error",
           context: ErrorSummary('Ejecutado cuando recibio mensaje de CloudMessaging'),
         ));
-                    
+        FirebaseCrashlytics.instance.crash();         
       }
 
     });
@@ -100,12 +125,13 @@ class _MyAppState extends State<MyApp> {
             builder: (_, ThemeMode currentMode, __) {
               return  MaterialApp(
                 title: 'Flutter Demo',
+                debugShowCheckedModeBanner: false,
                 theme: ThemeData(
                   primarySwatch: Colors.lime,
                 ),
                 darkTheme: ThemeData.dark(),
                 themeMode: currentMode,
-                home: const PageLogin(),
+                home: PageLogin(),
               );
             }
         );
