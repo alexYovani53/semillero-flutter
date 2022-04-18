@@ -13,6 +13,7 @@ class CuppertinoBar extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
+          activeColor: Colors.green,
           items: const [
               BottomNavigationBarItem(
                   icon: Icon(Icons.emoji_people,color: Colors.indigo),

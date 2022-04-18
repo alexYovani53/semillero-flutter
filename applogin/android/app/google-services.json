@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "401715234301",
-    "project_id": "appflutter-8e8c9",
-    "storage_bucket": "appflutter-8e8c9.appspot.com"
+    "project_number": "623093910211",
+    "project_id": "semillero-144a0",
+    "storage_bucket": "semillero-144a0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:401715234301:android:3c8267ed4ca0ba59000594",
+        "mobilesdk_app_id": "1:623093910211:android:251942cd548845c6193076",
         "android_client_info": {
           "package_name": "com.example.applogin"
         }
       },
       "oauth_client": [
         {
-          "client_id": "401715234301-qm3kdb6ngnnhg8e5te070bv14n64gfd8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.applogin",
-            "certificate_hash": "729e067327c57204317b10133b7a58132549657d"
-          }
-        },
-        {
-          "client_id": "401715234301-9p5uapg5fs3fnlkpt7ddnsprfqg42pfs.apps.googleusercontent.com",
+          "client_id": "623093910211-jstkjc08jdt4d2pskmct5496j3gkbihe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBy4XIDvSttVPJa1I2jDw_mUQMcMOoPSX4"
+          "current_key": "AIzaSyAiaJOvbe4Dl4ejtxc4Pt6pJ6L92zobqR4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "401715234301-9p5uapg5fs3fnlkpt7ddnsprfqg42pfs.apps.googleusercontent.com",
+              "client_id": "623093910211-jstkjc08jdt4d2pskmct5496j3gkbihe.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

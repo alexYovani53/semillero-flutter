@@ -4,6 +4,7 @@ import 'package:applogin/model/cliente/cliente_list.dart';
 import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class PageDAta extends StatelessWidget {
   const PageDAta({ Key? key }) : super(key: key);
@@ -12,7 +13,7 @@ class PageDAta extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future:ApiManager.shared.request(baseUrl: "3.19.244.228:8585", uri: "/cliente/GetAll", type: HttpType.GET ),
+        future:ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/GetAll", type: HttpType.GET ),
         builder: (BuildContext context, snapshot){
           if (snapshot.hasData){
             final ClienteList client = snapshot.requireData as ClienteList;

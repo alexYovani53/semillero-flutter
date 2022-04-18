@@ -24,7 +24,7 @@ class TextInput extends StatelessWidget {
   OutlineInputBorder getBorde (){
    const borde= OutlineInputBorder(
             borderSide: BorderSide(
-              color: Color(0xffe5e5e5)
+              color: Color.fromARGB(255, 255, 255, 255)
             ),
             borderRadius: BorderRadius.all(Radius.circular(15.0))
           );
@@ -43,7 +43,7 @@ class TextInput extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Color.fromARGB(255, 163, 173, 179),
+          fillColor: Color.fromARGB(255, 19, 122, 182),
           border: InputBorder.none,
           hintText: hintText,
           prefixIcon: Padding(

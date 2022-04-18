@@ -4,11 +4,13 @@ class GradientBack extends StatelessWidget {
 
   String? title;
   double? height;
+  bool login;
   
   GradientBack({ 
     Key? key,
     this.title,
-    this.height }) : super(key: key);
+    this.height,
+    this.login = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +20,24 @@ class GradientBack extends StatelessWidget {
 
     height ??= screenHeight;
 
+
+    if (login) {
+      return backGround(height??screenHeight, screenWidth);
+    } 
+
     return Container(
       height: height,
       decoration: const BoxDecoration(
         gradient:  LinearGradient(
             stops: [
-                    0.10, 
-                    0.46, 
-                    0.62, 
-                    0.84, 
+                    0.50, 
                     0.90, 
                     ],
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  Color(0xFF00B4DB), 
-                  Color(0xFF00A4DB), 
-                  Color(0xFF0094DB), 
-                  Color(0xFF0084DB), 
-                  Color(0xFF0073B0), 
+                  Color.fromRGBO(167,220,225,1), 
+                  Color.fromRGBO(28, 13, 138, 255), 
                   ],
           )
       ),
@@ -47,7 +48,7 @@ class GradientBack extends StatelessWidget {
           width: screenWidth,
           height: screenHeight,
           decoration: BoxDecoration(
-            color:Color.fromRGBO(0, 0, 0, 0.05),
+            color:Color.fromRGBO(0, 0, 0, 0.03),
             borderRadius: BorderRadius.circular(screenWidth/2)
           ),
         ),
@@ -55,5 +56,53 @@ class GradientBack extends StatelessWidget {
       
       alignment: Alignment(-0.9, -0.6),
     );
+  
   }
+
+  Widget backGround(double screenHeight, double screenWidth){
+    return Container(
+      height: screenHeight,
+      width: screenWidth,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Image.asset(
+              'assets/images/top1.png',
+              // color: Colors.blue,
+              width: screenWidth,
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Image.asset(
+              'assets/images/top2.png',
+              // color: Colors.blueAccent,
+              width: screenWidth,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/images/bottom1.png',
+              width: screenWidth,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/images/bottom2.png',
+              width: screenWidth,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }

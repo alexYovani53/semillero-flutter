@@ -8,6 +8,7 @@ import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:applogin/pages/page_client/TableClient.dart';
 import 'package:applogin/widgets/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class PageClient extends StatefulWidget {
@@ -26,7 +27,7 @@ class _PageClientState extends State<PageClient> {
 
   void actualizarData () async{
 
-    final response = await ApiManager.shared.request(baseUrl: "3.19.244.228:8585", uri: "/cliente/GetAll", type: HttpType.GET );
+    final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/GetA", type: HttpType.GET );
     setState(()  {
           clientList = ClienteList.fromList(response);
     });
@@ -140,7 +141,7 @@ class _PageClientState extends State<PageClient> {
                           body["numeroVia"]=controllerNumeroVia.text;
                         
 
-                        final response = await ApiManager.shared.request(baseUrl: "3.19.244.228:8585", uri: "/cliente/Post", type: HttpType.POST,bodyParams: body);
+                        final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/Post", type: HttpType.POST,bodyParams: body);
                         
                         body = <String,dynamic>{};
                         if (response !=null){
@@ -219,17 +220,34 @@ class _PageClientState extends State<PageClient> {
 
     
     return  Container(
-      child: ListView(
-
-        children: [
-          
+      child: Stack(
+        children: [          
           EncabezadoPages(titulo: "Clientes"),            
-          formulario(),
           Container(
-              child: TableClient(listaCliente: clientList,actualizar: () {
-                actualizarData();
-              },editar: editar),
-          )  
+            margin: EdgeInsets.only(top: 100.0),
+            child:  ListView(
+              children: [
+                formulario(),
+                Container(
+                    
+                    height: 500.0,
+                    padding: EdgeInsets.all(5.0),
+                    margin: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Color.fromARGB(255, 0, 0, 0), width: 2),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20.0),
+                        bottomRight:Radius.circular(20.0)
+                      )
+                    ),
+                    child: TableClient(listaCliente: clientList,actualizar: () {
+                      actualizarData();
+                    },editar: editar),
+                )  
+              ],
+            ),
+          )
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/scroll_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
 class TableSiniestro extends StatefulWidget {
@@ -30,8 +31,18 @@ class _TableSiniestroState extends State<TableSiniestro> {
   Widget buildDataTable(){
     final columns  = ['Fecha',"Causas","Aceptado?","Indemnización","NúmeroPoliza","DNI Perito",""];
 
-    return DataTable(
-      sortAscending: true,
+    return DataTable(      
+      headingRowColor: MaterialStateColor.resolveWith((states) => Color.fromARGB(255, 183, 233, 125)),
+
+      border:TableBorder.symmetric(inside: BorderSide(width: 2, color: Colors.blue), outside: BorderSide(width: 3, color: Colors.blue)),
+    
+      headingTextStyle: const TextStyle(
+        color: Colors.black87
+      ),
+      dataTextStyle: const TextStyle(
+        color: Colors.black54
+      ),
+      
       sortColumnIndex: 1,
       columns: getColumns(columns),
       rows: getRows(widget.listaSiniestro),
@@ -40,7 +51,7 @@ class _TableSiniestroState extends State<TableSiniestro> {
 
   List<DataColumn> getColumns(List<String> columns){
     return columns.map((String columna) => DataColumn(
-      label: Text(columna),
+      label: Text(columna,overflow: TextOverflow.fade),
       //onSort: onSort
     )).toList();
   }
@@ -54,7 +65,7 @@ class _TableSiniestroState extends State<TableSiniestro> {
       List<DataCell> celdas = getCells(cells);
       celdas.add(botones(siniestro.idSiniestro));
 
-      return DataRow(cells: celdas );
+      return DataRow(cells: celdas);
     }).toList();
   }
 
@@ -71,8 +82,9 @@ class _TableSiniestroState extends State<TableSiniestro> {
         children: [
           IconButton(
             icon: const Icon(Icons.delete),
+            color: Colors.black87,
             onPressed: ()async{
-              final data =  await ApiManager.shared.request(baseUrl: '3.19.244.228:8585', uri: 'siniestros/delete/$siniestro', type: HttpType.DELETE);
+              final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'siniestros/delete/$siniestro', type: HttpType.DELETE);
               widget.actualizar();
           }),
         ],

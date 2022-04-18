@@ -21,7 +21,7 @@ class EncabezadoPages  extends StatelessWidget {
     return 
           Stack(
             children: [
-              GradientBack(height: 100.0),
+              GradientBack(),
               Container(                
                 margin: EdgeInsets.only(top: 40.0,left: 15.0),
                 child: Row(
@@ -30,7 +30,7 @@ class EncabezadoPages  extends StatelessWidget {
                     Text(
                       titulo,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color.fromARGB(248, 23, 110, 223),
                         fontWeight: FontWeight.bold,
                         fontSize: 30.0
                       ),

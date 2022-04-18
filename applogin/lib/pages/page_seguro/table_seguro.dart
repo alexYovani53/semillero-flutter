@@ -6,6 +6,7 @@ import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/scroll_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
 class TableSeguro extends StatefulWidget{
@@ -35,8 +36,20 @@ class _TableSeguroState extends State<TableSeguro> {
     final columns  = ['Ramo',"Fecha Inico","Fecha Vencimiendo","Condiciones","Dni cliente",""];
 
     return DataTable(
-      sortAscending: true,
-      sortColumnIndex: 1,
+      headingRowColor: MaterialStateColor.resolveWith((states) => Color.fromARGB(255, 183, 233, 125)),
+      border: TableBorder.all(color: Colors.black,width: 1.0),
+      headingTextStyle: TextStyle(
+        color: Colors.black87
+      ),
+      dataTextStyle: TextStyle(
+        color: Colors.black54
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(50.0))       
+        //color:  MaterialStateColor.resolveWith((states) => Colors.amber)
+      ),
+      sortColumnIndex: 1,     
+      showBottomBorder: true,
       columns: getColumns(columns),
       rows: getRows(widget.listaSeguros),
     );
@@ -71,9 +84,10 @@ class _TableSeguroState extends State<TableSeguro> {
       Row(
         children: [
           IconButton(
+            color: Colors.black87,
             icon: const Icon(Icons.delete),
             onPressed: ()async{
-              final data =  await ApiManager.shared.request(baseUrl: '3.19.244.228:8585', uri: 'seguros/Delete/$poliza', type: HttpType.DELETE);
+              final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'seguros/Delete/$poliza', type: HttpType.DELETE);
               widget.actualizar();
           })
         ],

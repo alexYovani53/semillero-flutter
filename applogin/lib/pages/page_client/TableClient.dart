@@ -4,6 +4,7 @@ import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/scroll_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TableClient extends StatefulWidget{
 
@@ -32,14 +33,24 @@ class _TableClientState extends State<TableClient> {
     return ScrollWidget(child:  buildDataTable());
   }
 
+  
+
   Widget buildDataTable(){
     final columns  = ['nombreCl',"apellido1","apellido2","ciudad","Cod Postal","Clase Via","Nombre Via","Numero Via", "telefono","observaciones",""];
 
     return DataTable(
-      columnSpacing: 5.0,
-      decoration: BoxDecoration(border: Border.all(color: Colors.green, width: 10)),
-      dividerThickness: 5,
-      showBottomBorder: true,
+      headingRowColor: MaterialStateColor.resolveWith((states) => Color.fromARGB(255, 183, 233, 125)),
+      border: TableBorder.all(color: Colors.black,width: 1.0),
+      headingTextStyle: TextStyle(
+        color: Colors.black87
+      ),
+      dataTextStyle: TextStyle(
+        color: Colors.black54
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(50.0))       
+        //color:  MaterialStateColor.resolveWith((states) => Colors.amber)
+      ),
       sortAscending: isAscending,
       sortColumnIndex: sortColumnIndex,
       columns: getColumns(columns),
@@ -61,12 +72,14 @@ class _TableClientState extends State<TableClient> {
       List<DataCell> celdas = getCells(cells);
       celdas.add(botones(client.dniCl,client));
 
-      return DataRow(cells: celdas,selected: true,color:  MaterialStateColor.resolveWith((states) => Colors.amber));
+      return DataRow(cells: celdas);
     }).toList();
   }
 
   List<DataCell> getCells(List<dynamic> cells){
-    return cells.map((campo) => DataCell(Text('$campo'))).toList();
+    return cells.map((campo) => DataCell(
+      Text('$campo'))
+      ).toList();
   }
 
   void onSort(int columnIndex, bool ascending){
@@ -90,12 +103,14 @@ class _TableClientState extends State<TableClient> {
       Row(
         children: [
           IconButton(
+            color: Colors.black87,
             icon: const Icon(Icons.delete),
             onPressed: ()async{
-              final data =  await ApiManager.shared.request(baseUrl: '3.19.244.228:8585', uri: 'cliente/Delete/$dniCl', type: HttpType.DELETE);
+              final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'cliente/Delete/$dniCl', type: HttpType.DELETE);
               widget.actualizar();
           }),
           IconButton(
+            color: Colors.black87,
             icon: const Icon(Icons.edit),
             onPressed: ()async{
               widget.editar(client);

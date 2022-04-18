@@ -12,6 +12,7 @@ import 'package:applogin/widgets/text_input.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:validators/validators.dart';
 import 'package:validators/sanitizers.dart';
 
@@ -107,7 +108,7 @@ class _PageLoginState extends State<PageLogin> {
                   return Stack(        
                     alignment: Alignment.center,
                     children: [
-                      GradientBack(height: null),
+                      GradientBack(height: null,login: true),
                       Container(
                         margin: EdgeInsets.all(20.0),
                         child: Form(
@@ -173,7 +174,7 @@ class _PageLoginState extends State<PageLogin> {
     //parametros["password"] = password;
 
 
-    final data =  await ApiManager.shared.request(baseUrl: '3.19.244.228:8585', uri: 'usuario/login', type: HttpType.GET,uriParams:parametros);
+    final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'usuario/login', type: HttpType.GET,uriParams:parametros);
     final lista = UsuarioList.fromList(data);
 
     if (lista.usuarios.isEmpty){

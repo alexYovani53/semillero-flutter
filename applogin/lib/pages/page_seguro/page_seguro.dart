@@ -7,6 +7,7 @@ import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:applogin/pages/page_client/TableClient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class PageSeguro extends StatefulWidget {
@@ -22,7 +23,7 @@ class _PageSeguroState extends State<PageSeguro> {
 
   void actualizarData () async{
 
-    final response = await ApiManager.shared.request(baseUrl: "3.19.244.228:8585", uri: "/seguros/GetAll", type: HttpType.GET );
+    final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/seguros/GetAll", type: HttpType.GET );
     setState(()  {
           seguroList = SeguroList.fromList(response);
     });
@@ -46,18 +47,38 @@ class _PageSeguroState extends State<PageSeguro> {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      child: Column(
-        children: [
-          EncabezadoPages(titulo: "Seguros"),
+
+    return Container(
+      child: Stack(
+        children: [          
+          EncabezadoPages(titulo: "Seguros"),            
           Container(
-            child: TableSeguro(listaSeguros: seguroList,actualizar: (){
-              actualizarData();
-            }),
+            margin: EdgeInsets.only(top: 100.0),
+            child:  ListView(
+              children: [
+                Container(
+                  height: 650.0,
+                  padding: EdgeInsets.all(5.0),
+                  margin: EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Color.fromARGB(255, 0, 0, 0), width: 2),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20.0),
+                      bottomRight:Radius.circular(20.0)
+                    )
+                  ),
+                  child: TableSeguro(listaSeguros: seguroList,actualizar: (){
+                    actualizarData();
+                  }),
+                ) 
+              ],
+            ),
           )
-                          
         ],
       ),
     );
+
+    
   }
 }
