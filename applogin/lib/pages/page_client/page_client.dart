@@ -1,11 +1,13 @@
 
 import 'package:applogin/model/cliente/cliente.dart';
 import 'package:applogin/model/cliente/cliente_list.dart';
+import 'package:applogin/pages/page_client/add_client.dart';
+import 'package:applogin/pages/page_client/list_client.dart';
 import 'package:applogin/provider/api_manager.dart';
+import 'package:applogin/repository/cliente_repository.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/button_green.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
-import 'package:applogin/pages/page_client/TableClient.dart';
 import 'package:applogin/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,230 +22,106 @@ class PageClient extends StatefulWidget {
 
 class _PageClientState extends State<PageClient> {
 
+
+
+  static bool clienteCargado = false;
+  
   ClienteList clientList = ClienteList.fromDefault();
   Map<String, dynamic> body = <String,dynamic>{};
   bool formularioActivo = false;
   final formKey = GlobalKey<FormState>();  
 
-  void actualizarData () async{
+  Future<void> actualizarData () async{
 
-    final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/GetA", type: HttpType.GET );
-    setState(()  {
+        if (!clienteCargado){
+          clienteCargado = true;
+          print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>****************###################### data no cargada");
+          final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/GetAll", type: HttpType.GET );
           clientList = ClienteList.fromList(response);
-    });
+          ClienteRepository.shared.save(data: clientList.clientes, tableName: "cliente");
+        }else{
+          print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>****************###################### CLIENTES YA REGISTRADOS");
+        }
+
+        final List<dynamic> clientesData = await ClienteRepository.shared.selectAll(tableName: "cliente");
+        setState(() {
+          clientList = ClienteList.fromDb(clientesData);
+        });
+
   }
   
   @override
   void didUpdateWidget(covariant PageClient oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
 
     print("pidiendo actualizacion");
     actualizarData();
   }
 
-  
-  final controllerNombre = TextEditingController();
-  final controllerApp1 = TextEditingController();
-  final controllerApp2 = TextEditingController();
-  final controllerClaseVia = TextEditingController();
-  final controllerNumeroVia = TextEditingController();
-  final controllerNombreVia = TextEditingController();
-  final controllerCodPostal = TextEditingController();
-  final controllerCiudad = TextEditingController();
-  final controllerTelefono = TextEditingController();  
-  final controllerObservaciones = TextEditingController();
-
-  Widget formulario(){
-    if (formularioActivo){
-      return Column(
-        children: [
-          IconButton(onPressed: (){
-            setState(() {
-              formularioActivo = false;
-            });
-          }, icon: Icon(Icons.close)),
-          Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-                TextInput(inputType: TextInputType.text, hintText: "Nombre",controller: controllerNombre, icono: Icons.mail , validator: (String data){
-                    if(data.isEmpty){
-                      return "Ingrese un nombre";
-                    } return null;
-                }),
-
-                TextInput(inputType: TextInputType.text, hintText: "Apellido 1",controller: controllerApp1,icono: Icons.password, validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese primer apellido";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.text, hintText: "Apellido 2",controller: controllerApp2,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese segundo apellido";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.text, hintText: "Clase Via",controller: controllerClaseVia,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Llenar clase via";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.number, hintText: "Numero Via",controller: controllerNumeroVia,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese numero via";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.text, hintText: "Nombre Via", controller: controllerNombreVia,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese nombre via";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.number, hintText: "Cod. Postal", controller: controllerCodPostal,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese su codigo postal";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.text, hintText: "Ciudad", controller: controllerCiudad,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese su ciudad";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.number, hintText: "Telefono",controller: controllerTelefono,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese un número telefonico";
-                    } return null;
-                  }),
-                TextInput(inputType: TextInputType.text, hintText: "Observaciones",controller: controllerObservaciones,icono: Icons.password,validator: (String data){ 
-                    if(data.isEmpty){
-                      return "Ingrese alguna opservacion";
-                    } return null;
-                  }),
-                 
-                
-                ButtonGreen(
-                  texto: "Registrar", 
-                  onPressed: ()async{
-                      if (formKey.currentState!.validate()){
-                        
-
-                          body["ciudad"]=controllerCiudad.text;
-                          body["observaciones"]=controllerObservaciones.text;
-                          body["codPostal"]=controllerCodPostal.text;
-                          body["telefono"]=controllerTelefono.text;
-                          body["apellido1"]=controllerApp1.text;
-                          body["apellido2"]=controllerApp2.text;
-                          body["claseVia"]=controllerClaseVia.text;
-                          body["nombreCl"]=controllerNombre.text;
-                          body["nombreVia"]=controllerNombreVia.text;
-                          body["numeroVia"]=controllerNumeroVia.text;
-                        
-
-                        final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/Post", type: HttpType.POST,bodyParams: body);
-                        
-                        body = <String,dynamic>{};
-                        if (response !=null){
-                          actualizarData();
-                        }
-                        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Respuesta");
-                        print(response);
-
-                        setState(() {
-                          formularioActivo = false;
-                        });
-                        
-                      }
+  // void editar(Cliente edit){
                       
-                      controllerCiudad.text = "";
-                      controllerObservaciones.text ="";
-                      controllerCodPostal.text = "";
-                      controllerTelefono.text ="";
-                      controllerApp1.text = "";
-                      controllerApp2.text = "";
-                      controllerClaseVia.text ="";
-                      controllerNombre.text ="";
-                      controllerNombreVia.text ="";
-                      controllerNumeroVia.text ="";
-                        
-                    }, 
-                )
-              ],
-            ),
-          ) 
-    
-        ],
-      );
-    }else{
-      return IconButton(onPressed: (){
-        setState(() {
-          formularioActivo = true;
-        });
-      }, icon: Icon(Icons.add));
-    }
-  }
+  //   body["dniCl"] = edit.dniCl;
+  //   controllerCiudad.text = edit.ciudad;
+  //   controllerObservaciones.text =edit.observaciones;
+  //   controllerCodPostal.text = edit.codPostal.toString();
+  //   controllerTelefono.text = edit.telefono.toString();
+  //   controllerApp1.text = edit.apellido1;
+  //   controllerApp2.text = edit.apellido2;
+  //   controllerClaseVia.text =edit.claseVia;
+  //   controllerNombre.text =edit.nombreCl;
+  //   controllerNombreVia.text =edit.nombreVia;
+  //   controllerNumeroVia.text =edit.numeroVia.toString()  ;
 
-  void editar(Cliente edit){
-                      
-    body["dniCl"] = edit.dniCl;
-    controllerCiudad.text = edit.ciudad;
-    controllerObservaciones.text =edit.observaciones;
-    controllerCodPostal.text = edit.codPostal.toString();
-    controllerTelefono.text = edit.telefono.toString();
-    controllerApp1.text = edit.apellido1;
-    controllerApp2.text = edit.apellido2;
-    controllerClaseVia.text =edit.claseVia;
-    controllerNombre.text =edit.nombreCl;
-    controllerNombreVia.text =edit.nombreVia;
-    controllerNumeroVia.text =edit.numeroVia.toString()  ;
-
-    setState(() {
-      formularioActivo = true;
-    });
+  //   setState(() {
+  //     formularioActivo = true;
+  //   });
                             
-  }
+  // }
 
   @override
   void initState() {
     super.initState();
     actualizarData();
-    formularioActivo = false;
-    formulario();
   }
 
 
   @override
   Widget build(BuildContext context) {  
-    
-
-
-    
-    return  Container(
-      child: Stack(
+      
+    return  Scaffold(
+      body: Stack(
         children: [          
           EncabezadoPages(titulo: "Clientes"),            
           Container(
             margin: EdgeInsets.only(top: 100.0),
             child:  ListView(
               children: [
-                formulario(),
-                Container(
-                    
-                    height: 500.0,
-                    padding: EdgeInsets.all(5.0),
-                    margin: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Color.fromARGB(255, 0, 0, 0), width: 2),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight:Radius.circular(20.0)
-                      )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => AddClient(),
+                        ));
+                      }, 
+                      icon: const Icon(Icons.add)
                     ),
-                    child: TableClient(listaCliente: clientList,actualizar: () {
-                      actualizarData();
-                    },editar: editar),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        await ClienteRepository.shared.addColumn(tableName: "cliente", columnName: "clienteNewColumn");
+                        
+                        await ClienteRepository.shared.update(tableName: "cliente", columnName: "clienteNewColumn",value: "Data - generada");
+                        
+                        await actualizarData();
+                      }, 
+                      icon: Icon(Icons.add), 
+                      label: Text("Add column")
+                    )
+                  ],
+                ),
+                Container(
+                    child: ListClient(listaCliente: clientList)
                 )  
               ],
             ),

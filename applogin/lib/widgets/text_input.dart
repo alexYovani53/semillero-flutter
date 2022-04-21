@@ -43,7 +43,7 @@ class TextInput extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Color.fromARGB(255, 19, 122, 182),
+          fillColor: Theme.of(context).backgroundColor,
           border: InputBorder.none,
           hintText: hintText,
           prefixIcon: Padding(

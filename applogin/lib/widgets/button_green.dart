@@ -27,8 +27,8 @@ class ButtonGreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(30.0),
           gradient: LinearGradient(
             colors: [
-              Color(0xFF4268D3),
-              Color(0xFF584CD1)
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColorDark
             ],
             begin: FractionalOffset(0.2, 0.0),
             end: FractionalOffset(1.0, 0.6),
@@ -42,7 +42,6 @@ class ButtonGreen extends StatelessWidget {
             texto,
             style:TextStyle(
               fontSize: 18.0,
-              color: Colors.white
             ),
           ),
         ),

@@ -1,12 +1,7 @@
 
-
-import 'dart:convert';
-
-import 'package:applogin/bloc/basic_bloc.dart';
 import 'package:applogin/main.dart';
-import 'package:applogin/repository/realtime_repository.dart';
+import 'package:applogin/repository/firebase/realtime_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThemeModeButton extends StatelessWidget {
   

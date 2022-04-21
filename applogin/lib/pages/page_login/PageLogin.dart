@@ -1,8 +1,6 @@
 
 import 'package:applogin/bloc/basic_bloc.dart';
 import 'package:applogin/model/usuario/usuario_list.dart';
-import 'package:applogin/pages/page_data/page_data.dart';
-import 'package:applogin/pages/page_error/page_error.dart';
 import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/button_green.dart';
@@ -14,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:validators/validators.dart';
-import 'package:validators/sanitizers.dart';
 
 class PageLogin extends StatefulWidget {
   const PageLogin({ Key? key }) : super(key: key);
@@ -174,7 +171,7 @@ class _PageLoginState extends State<PageLogin> {
     //parametros["password"] = password;
 
 
-    final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'usuario/login', type: HttpType.GET,uriParams:parametros);
+    final data =  await ApiManager.shared.request(baseUrl:dotenv.env['BASE_URL']!, uri: 'usuario/login', type: HttpType.GET,uriParams:parametros);
     final lista = UsuarioList.fromList(data);
 
     if (lista.usuarios.isEmpty){

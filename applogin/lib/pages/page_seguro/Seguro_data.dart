@@ -1,0 +1,80 @@
+
+
+import 'package:applogin/main.dart';
+import 'package:applogin/model/cliente/cliente.dart';
+import 'package:applogin/model/seguro/seguro.dart';
+import 'package:applogin/provider/api_manager.dart';
+import 'package:applogin/repository/seguro_repository.dart';
+import 'package:applogin/utils/app_type.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
+
+class SeguroData extends StatelessWidget {
+
+  Seguro seguro;
+
+  SeguroData({ 
+    Key? key,
+    required this.seguro
+  }) : super(key: key);
+
+  Widget getRow(String text){
+    return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(                
+                margin: EdgeInsets.only(top: 6.0),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: 2.0, color: Colors.lightBlue.shade900),
+                  )
+                ),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 30.0
+                  ),
+                ),
+              )
+            ],
+          );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final DateFormat  formatter = DateFormat('yyyy-MM-dd');
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(seguro.numeroPoliza.toString())
+      ),
+      body: Container(
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          getRow(seguro.numeroPoliza.toString()),
+          getRow(seguro.ramo),
+          getRow(seguro.dniCl.toString()),
+          getRow(formatter.format(seguro.fechaInicio)),
+          getRow(formatter.format(seguro.fechaVencimiento)),
+          IconButton(
+            color: Colors.black87,
+            icon: const Icon(Icons.delete),
+            onPressed: ()async{
+              if(true ){
+                SeguroRepository.shared.deleteWhere(tableName: "seguros",whereClause: "numeroPoliza = ?",whereArgs: ['${seguro.numeroPoliza}']);  
+                Navigator.pop(context);       
+              }else{
+                final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'cliente/Delete/${seguro.numeroPoliza}', type: HttpType.DELETE);
+              }
+              
+          })
+          
+        ],
+      ),
+      )
+    );
+  }
+}

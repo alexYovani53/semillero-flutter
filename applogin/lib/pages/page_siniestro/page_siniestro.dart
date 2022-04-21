@@ -1,7 +1,9 @@
 
 import 'package:applogin/model/siniestro/siniestro_list.dart';
+import 'package:applogin/pages/page_siniestro/list_siniestro.dart';
 import 'package:applogin/pages/page_siniestro/table_siniestro.dart';
 import 'package:applogin/provider/api_manager.dart';
+import 'package:applogin/repository/siniestro_repository.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ class _PageSiniestroState extends State<PageSiniestro> {
 
   SiniestroList listaSiniestros = SiniestroList.fromDefault();
 
+  static bool siniestroCargado = false;
   
   @override
   void initState() {    
@@ -28,13 +31,23 @@ class _PageSiniestroState extends State<PageSiniestro> {
 
   Future<void> actualizarData() async{
 
-    final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/siniestros/getAll", type: HttpType.GET );
-    
-    print("REspuesta");
-    print(response);
+    if(!siniestroCargado){
+      siniestroCargado = true;    
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>****************###################### data no cargada");
+          
+      final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/siniestros/getAll", type: HttpType.GET );
+      final siniestrosList = SiniestroList.fromList(response);
+      SiniestroRepository.shared.save(data: siniestrosList.siniestros, tableName: "siniestros");
+
+    }else{
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>****************###################### SINIESTROS YA REGISTRADOS");
+          
+    }
+
+    final List<dynamic> siniestrosData = await SiniestroRepository.shared.selectAll(tableName: "siniestros");
 
     setState(()  {
-          listaSiniestros = SiniestroList.fromList(response);
+          listaSiniestros = SiniestroList.fromList(siniestrosData);
     });
 
   }
@@ -63,20 +76,7 @@ class _PageSiniestroState extends State<PageSiniestro> {
             child:  ListView(
               children: [
                 Container(
-                    height: 500.0,
-                    padding: EdgeInsets.all(5.0),
-                    margin: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Color.fromARGB(255, 0, 0, 0), width: 2),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight:Radius.circular(20.0)
-                      )
-                    ),
-                  child: TableSiniestro(listaSiniestro: listaSiniestros,actualizar: (){
-                    actualizarData();
-                  }),
+                  child: ListSiniestro(listaSiniestros: listaSiniestros)
                 )
               ],
             ),

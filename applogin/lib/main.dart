@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:applogin/pages/page_login/PageLogin.dart';
+import 'package:applogin/repository/db_manager.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatefulWidget {
   
    // Using "static" so that we can easily access it later
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+  
 
   const MyApp({ Key? key }) : super(key: key);
 
@@ -40,6 +42,8 @@ class _MyAppState extends State<MyApp> {
     await initiliazeRemoteConfig();
     await initiliazeCloudMessage();
     await initializeRealTime();
+    
+    await DbManager.shared.deleteDb();  
   }
 
   Future<void> initializeRealTime() async {
@@ -110,8 +114,8 @@ class _MyAppState extends State<MyApp> {
   void initState(){
     super.initState();
     dotenv.load();
-
     _firebase = initiliazeFB();
+    
   }
 
 
@@ -129,9 +133,45 @@ class _MyAppState extends State<MyApp> {
                 title: 'Flutter Demo',
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(
-                  primarySwatch: Colors.lime,
+                     // Define the default brightness and colors.
+                  brightness: Brightness.light,
+                  primaryColor: Color.fromARGB(255, 179, 208, 231),
+                  primaryColorLight: Colors.orange,
+                  primaryColorDark: Colors.blue,
+
+                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                  floatingActionButtonTheme: FloatingActionButtonThemeData(
+                    backgroundColor: Colors.green
+                  ),
+                  textTheme: const TextTheme(
+                    headline1: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.black),
+                    headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+                    bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+                  ),
+
                 ),
-                darkTheme: ThemeData.dark(),
+                darkTheme: ThemeData(
+                     // Define the default brightness and colors.
+                  brightness: Brightness.dark,
+                  primaryColor: Color.fromARGB(255, 124, 3, 3),
+                  primaryColorLight: Color.fromARGB(255, 170, 162, 151),
+                  primaryColorDark: Color.fromARGB(255, 80, 24, 41),
+
+                  floatingActionButtonTheme: FloatingActionButtonThemeData(
+                    backgroundColor: Color.fromARGB(255, 101, 129, 102)
+                  ),
+                  
+                  // Define the default font family.
+                  fontFamily: 'Georgia',
+
+                  // Define the default `TextTheme`. Use this to specify the default
+                  // text styling for headlines, titles, bodies of text, and more.
+                  textTheme: const TextTheme(
+                    headline1: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold,color: Colors.white),
+                    headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+                    bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+                  ),
+                ),
                 themeMode: currentMode,
                 home: PageLogin(),
               );

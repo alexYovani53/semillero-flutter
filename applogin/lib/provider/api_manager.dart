@@ -1,10 +1,9 @@
 
 import 'dart:convert';
 
-import 'package:applogin/model/cliente/cliente_list.dart';
 import 'package:applogin/model/registro/registro_peticion.dart';
-import 'package:applogin/repository/fire_store_repository.dart';
-import 'package:applogin/repository/gps_repository.dart';
+import 'package:applogin/repository/firebase/fire_store_repository.dart';
+import 'package:applogin/repository/firebase/gps_repository.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -25,15 +24,14 @@ class ApiManager {
     Map<String, dynamic>? bodyParams,
     Map<String, dynamic>? uriParams,
   }) async {
-    
-    Uri uri_;
-    if(uriParams == null ){
-      uri_  = Uri.http(baseUrl, uri);
-    }else{
-      uri_  = Uri.http(baseUrl, uri,uriParams);
-    }
 
-    print(uri_);
+    Map<String, String> headers = {
+      "Accept": "application/json"
+    };
+
+    Uri uri_=  Uri.http(baseUrl, uri,uriParams);
+    
+    print(uri_);    
 
     final ubicacion = await GPS.determinePosition();
 
@@ -41,7 +39,7 @@ class ApiManager {
 
     switch(type){
       case HttpType.GET:
-        response = await http.get(uri_);
+        response = await http.get(uri_,headers: headers);
         repo.registrarGet(
           RegistroPeticion(peticion: uri_.toString(),latitud: ubicacion.latitude, longitud: ubicacion.longitude)
         );
@@ -69,7 +67,6 @@ class ApiManager {
         if(response.statusCode == 200){
           return response.body;
         } else{
-
           Future.error('Error en peticion delete');
         }
 
@@ -83,9 +80,7 @@ class ApiManager {
       return body;
 
     }else{
-      print(response.statusCode);
-      print(response.body);
-
+      
       Future.error('Error ${response.statusCode}');
       FlutterError.reportError(FlutterErrorDetails(
         exception: "Error en peticion ${uri_.path}",

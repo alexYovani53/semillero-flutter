@@ -1,3 +1,4 @@
+import 'package:applogin/main.dart';
 import 'package:flutter/material.dart';
 
 class GradientBack extends StatelessWidget {
@@ -27,18 +28,18 @@ class GradientBack extends StatelessWidget {
 
     return Container(
       height: height,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient:  LinearGradient(
             stops: [
                     0.50, 
-                    0.90, 
+                    0.99, 
                     ],
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  Color.fromRGBO(167,220,225,1), 
-                  Color.fromRGBO(28, 13, 138, 255), 
-                  ],
+                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFf7f8f8):Color(0xFF000000),
+                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFacbb78):Color(0xFF434343),
+            ],
           )
       ),
       child: FittedBox(

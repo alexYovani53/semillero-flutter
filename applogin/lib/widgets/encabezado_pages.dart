@@ -1,5 +1,5 @@
 import 'package:applogin/main.dart';
-import 'package:applogin/repository/realtime_repository.dart';
+import 'package:applogin/repository/firebase/realtime_repository.dart';
 import 'package:applogin/widgets/gradient_back.dart';
 import 'package:applogin/widgets/theme_mode_button.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +29,7 @@ class EncabezadoPages  extends StatelessWidget {
                   children: [
                     Text(
                       titulo,
-                      style: const TextStyle(
-                        color: Color.fromARGB(248, 23, 110, 223),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30.0
-                      ),
+                      style: Theme.of(context).textTheme.headline1,
                     ), 
                     IconButton(
                       icon: Icon(MyApp.themeNotifier.value == ThemeMode.light

@@ -1,8 +1,10 @@
 
 import 'package:applogin/model/cliente/cliente_list.dart';
 import 'package:applogin/model/seguro/seguro_list.dart';
+import 'package:applogin/pages/page_seguro/list_client.dart';
 import 'package:applogin/pages/page_seguro/table_seguro.dart';
 import 'package:applogin/provider/api_manager.dart';
+import 'package:applogin/repository/seguro_repository.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:applogin/pages/page_client/TableClient.dart';
@@ -20,12 +22,26 @@ class PageSeguro extends StatefulWidget {
 class _PageSeguroState extends State<PageSeguro> {
 
   SeguroList seguroList = SeguroList.fromDefault();
+  static bool seguroCargado = false;
 
   void actualizarData () async{
 
-    final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/seguros/GetAll", type: HttpType.GET );
-    setState(()  {
-          seguroList = SeguroList.fromList(response);
+    if (!seguroCargado){
+      seguroCargado = true;
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>****************###################### data no cargada");
+      final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/seguros/GetAll", type: HttpType.GET );
+      final segurosList = SeguroList.fromList(response);
+      SeguroRepository.shared.save(data: segurosList.seguros, tableName: "seguros");
+
+    }else{
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>****************###################### SEGUROS YA REGISTRADOS");
+      
+    }
+    
+    final List<dynamic> segurosData = await SeguroRepository.shared.selectAll(tableName: "seguros");
+
+    setState(() {
+      seguroList = SeguroList.fromList(segurosData);
     });
   }
 
@@ -48,8 +64,8 @@ class _PageSeguroState extends State<PageSeguro> {
   @override
   Widget build(BuildContext context) {
 
-    return Container(
-      child: Stack(
+    return Scaffold(
+      body: Stack(
         children: [          
           EncabezadoPages(titulo: "Seguros"),            
           Container(
@@ -57,20 +73,7 @@ class _PageSeguroState extends State<PageSeguro> {
             child:  ListView(
               children: [
                 Container(
-                  height: 650.0,
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Color.fromARGB(255, 0, 0, 0), width: 2),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20.0),
-                      bottomRight:Radius.circular(20.0)
-                    )
-                  ),
-                  child: TableSeguro(listaSeguros: seguroList,actualizar: (){
-                    actualizarData();
-                  }),
+                  child: ListSeguro(listaSeguros: seguroList)
                 ) 
               ],
             ),

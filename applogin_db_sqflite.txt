@@ -1,0 +1,34 @@
+CREATE TABLE clientes (
+    dni_cl        integer not null primary key autoincrement,
+    nombre_cl     text,
+    apellido_1    text,
+    apellido_2    text,
+    clase_via     text,
+    numero_via    integer,
+    cod_postal    integer,
+    ciudad        text,
+    telefono      integer,
+    observaciones text,
+    nombre_via    text,
+);
+
+
+CREATE TABLE seguros (
+    numeroPoliza           integer not null primary key,
+    ramo                     text,
+    fechaInicio             text,
+    fechaVencimiento        text,
+    condicionesParticulares text,
+    dniCl                   integer
+);
+
+CREATE TABLE siniestros (
+    idSiniestro    integer NOT NULL autoincrement,
+    fechaSiniestro text,
+    causas          text,
+    aceptado        text,
+    indemnizacion   integer,
+    numeroPoliza   integer,
+    dniPerito      integer
+);
+

@@ -13,15 +13,29 @@ class PageDAta extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future:ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/GetAll", type: HttpType.GET ),
-        builder: (BuildContext context, snapshot){
-          if (snapshot.hasData){
-            final ClienteList client = snapshot.requireData as ClienteList;
-            print('Si tine data: ${client.clientes[0].apellido1} ');
+        future:ApiManager.shared.request(baseUrl: '192.168.1.70:8585', uri: "/cliente/GetAll", type: HttpType.GET ),
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+
+          switch (snapshot.connectionState){
+
+            case ConnectionState.waiting:
+            case ConnectionState.none:
+              return CircularProgressIndicator();
+
+            case ConnectionState.active:
+            case ConnectionState.done:
+            default:              
+              print(snapshot);
+
+              if (snapshot.hasData){
+                final  client = snapshot.requireData;
+                print(client);
+              }
+              
+              print('no tiene data');
+              return Container();
           }
-          
-          print('no tiene data');
-          return Container();
+
         }
       )
     );

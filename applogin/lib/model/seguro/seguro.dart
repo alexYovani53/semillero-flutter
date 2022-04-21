@@ -20,4 +20,24 @@ class Seguro {
     dniCl = data['dniCl'];
   }
 
+  Seguro.fromDb(Map<String, dynamic> data){
+
+    numeroPoliza = data['numeroPoliza'];
+    ramo = data['ramo'];
+    fechaInicio = DateTime.parse(data['fechaInicio']);
+    fechaVencimiento = DateTime.parse(data['fechaVencimiento']);
+    condicionesParticulares = data['condicionesParticulares'];
+    dniCl = data['dniCl'];
+
+  }
+
+  Map<String, dynamic> toDatabase()=>{
+    'numeroPoliza':numeroPoliza,
+    'fechaInicio':fechaInicio.toString(),
+    'fechaVencimiento':fechaVencimiento.toString(),
+    'ramo':ramo,
+    'condicionesParticulares':condicionesParticulares,
+    'dniCl':dniCl,
+  };
+
 }
