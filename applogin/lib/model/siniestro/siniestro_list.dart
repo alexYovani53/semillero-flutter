@@ -13,6 +13,12 @@ class SiniestroList {
     }
 
   }
+  SiniestroList.fromDb(List<dynamic> data){
+    siniestros = [];    
+    for (var item in data) {
+      siniestros.add(Siniestro.fromDb(item));
+    }
+  }
 
   SiniestroList.fromDefault(){
     siniestros = [];

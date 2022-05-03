@@ -1,10 +1,13 @@
+import 'package:applogin/bloc/cliente_bloc/cliente_bloc.dart';
 import 'package:applogin/model/cliente/cliente.dart';
+import 'package:applogin/provider/api_cliente_provider.dart';
 import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/repository/cliente_repository.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/button_green.dart';
 import 'package:applogin/widgets/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddClient extends StatefulWidget {
@@ -38,7 +41,7 @@ class _AddClientState extends State<AddClient> {
   final controllerTelefono = TextEditingController();  
   final controllerObservaciones = TextEditingController();
 
-  Widget formulario(){
+  Widget formulario(BuildContext context){
 
       if(widget.clientEdit!= null){
             body["dniCl"] = widget.clientEdit!.dniCl;
@@ -137,11 +140,10 @@ class _AddClientState extends State<AddClient> {
                               body["numeroVia"]=int.parse(controllerNumeroVia.text);
                             
 
-                            //final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/Post", type: HttpType.POST,bodyParams: body);
-                            
-                            final ClienteNuevo = Cliente.fromServiceSpring(body);
-
-                            final response = await ClienteRepository.shared.save(data: [ClienteNuevo], tableName:"cliente");
+                            final response = await ApiClienteProvider.shared.guardarCliente(body);
+                            // //final response = await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: "/cliente/Post", type: HttpType.POST,bodyParams: body);
+                            // final ClienteNuevo = Cliente.fromServiceSpring(body);
+                            // final response = await ClienteRepository.shared.save(data: [ClienteNuevo], tableName:"cliente");
 
                             body = <String,dynamic>{};
                             if (response !=null){                       
@@ -156,12 +158,10 @@ class _AddClientState extends State<AddClient> {
                               controllerNombre.text ="";
                               controllerNombreVia.text ="";
                               controllerNumeroVia.text ="";
-                              
-                              Navigator.pop(context);
-                            }
-                            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Respuesta");
-                            //print(response);
 
+                              BlocProvider.of<ClienteBloc>(context).add(SalirRegistroClienteEvent());
+                              
+                            }
                           }
                           
                         }, 
@@ -179,12 +179,31 @@ class _AddClientState extends State<AddClient> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: ListView(
-        children: [
-          formulario()
-        ],
+
+    return  BlocProvider(
+      create: (context) => ClienteBloc(),
+      child: BlocListener<ClienteBloc, ClienteState>(
+        listener: (context,  state) {
+          switch (state.runtimeType) {
+            case RegresarAPageState:              
+                Navigator.pop(context);
+              break;
+            default:
+              break;
+          }
+        },
+        child: BlocBuilder<ClienteBloc, ClienteState>(
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(),
+              body: ListView(
+                children: [
+                  formulario(context)
+                ],
+              ),
+            );
+          },
+        )
       ),
     );
   }

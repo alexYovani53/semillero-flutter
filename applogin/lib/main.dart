@@ -1,22 +1,36 @@
 import 'dart:async';
-import 'dart:convert';
-
+import 'package:applogin/bloc/basic_bloc/basic_bloc.dart';
+import 'package:applogin/bloc/bloc_observer/simple_bloc_observer.dart';
 import 'package:applogin/pages/page_login/PageLogin.dart';
+import 'package:applogin/pages/page_login/page_init.dart';
+import 'package:applogin/pages/page_login/prueba.dart';
 import 'package:applogin/repository/db_manager.dart';
+import 'package:bloc/bloc.dart';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 
 void main() {
-  runZonedGuarded(
-    ()=>runApp(const MyApp()),
-    (error, stack) => FirebaseCrashlytics.instance.recordError(error,stack,reason: "Error en zona segura"));
+  
+  BlocOverrides.runZoned(
+    ()=>runZonedGuarded(
+      ()=>runApp(MultiBlocProvider(
+            providers: [BlocProvider(create: (context) => BasicBloc())],
+            child: const MyApp(),
+          )),
+   (error, stack) => FirebaseCrashlytics.instance.recordError(error,stack,reason: "Error en zona segura")),
+    blocObserver:BlocObserverApp() 
+  );
+  // runZonedGuarded(
+  //   ()=>runApp(const MyApp()),
+  //   (error, stack) => FirebaseCrashlytics.instance.recordError(error,stack,reason: "Error en zona segura"));
 }
 
 class MyApp extends StatefulWidget {
@@ -24,6 +38,7 @@ class MyApp extends StatefulWidget {
   
    // Using "static" so that we can easily access it later
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+  static bool connected = false;
   
 
   const MyApp({ Key? key }) : super(key: key);
@@ -173,7 +188,36 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
                 themeMode: currentMode,
-                home: PageLogin(),
+                home: OfflineBuilder(
+                  connectivityBuilder: (context, connectivity, child) {
+                      MyApp.connected =  connectivity != ConnectivityResult.none;
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Positioned(
+                              height: 24.0,
+                              left: 0.0,
+                              right: 0.0,
+                              child: Container(
+                                color: MyApp.connected
+                                    ? Color(0xFF00EE44)
+                                    : Color(0xFFEE4400),
+                                child: Center(
+                                  child: Text(
+                                      "${MyApp.connected ? 'ONLINE' : 'OFFLINE'}"),
+                                ),
+                              ),
+                            ),
+                            Scaffold(
+                              body: child,
+                            ),
+                          ],
+                        );
+                  },
+                  // child: Prueba(),
+                  child: PageInit()
+
+                ),
               );
             }
         );

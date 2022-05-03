@@ -13,6 +13,14 @@ class SeguroList {
 
   }
 
+  SeguroList.fromDb(List<dynamic> data){
+    seguros = [];
+
+    for (var item in data) {
+      seguros.add(Seguro.fromDb(item));
+    }
+
+  }
   SeguroList.fromDefault(){
     seguros = [];
   }

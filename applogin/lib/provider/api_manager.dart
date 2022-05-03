@@ -29,12 +29,8 @@ class ApiManager {
       "Accept": "application/json"
     };
 
-    Uri uri_=  Uri.http(baseUrl, uri,uriParams);
-    
-    print(uri_);    
-
+    Uri uri_=  Uri.http(baseUrl, uri,uriParams);    
     final ubicacion = await GPS.determinePosition();
-
     http.Response? response = null; 
 
     switch(type){
@@ -63,22 +59,16 @@ class ApiManager {
         repo.registrarDelete(
           RegistroPeticion(peticion: uri_.toString(),latitud: ubicacion.latitude, longitud: ubicacion.longitude)
         );
-
-        if(response.statusCode == 200){
-          return response.body;
-        } else{
-          Future.error('Error en peticion delete');
-        }
-
         break;
 
     }
 
-    if(response.statusCode == 200){
-
-      final body = json.decode(response.body);
+    if(response.statusCode == 403){
+      return 403;
+    }else if(response.statusCode == 200){      
+      if (type == HttpType.DELETE) return response.body;
+      final body =  jsonDecode(utf8.decode(response.bodyBytes));
       return body;
-
     }else{
       
       Future.error('Error ${response.statusCode}');
@@ -88,7 +78,7 @@ class ApiManager {
         context: ErrorSummary('Presionando un boton '),
       ));
 
-      return "[]";               
+      return null ;               
     }
 
   }

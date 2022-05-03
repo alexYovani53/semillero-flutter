@@ -13,9 +13,11 @@ import 'package:intl/intl.dart';
 class SeguroView extends StatefulWidget {
   
   Seguro seguro;
+  Function(Seguro seguro) navegar;
 
   SeguroView({    
-    required this.seguro
+    required this.seguro,
+    required this.navegar
   });
 
 
@@ -41,15 +43,11 @@ class _SeguroViewState extends State<SeguroView> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(50.00)),
         gradient:  LinearGradient(
-            stops: [
-                    0.50, 
-                    0.99, 
-                    ],
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFcac531):Color(0xFF485563),
-                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFf3f9a7):Color(0xFF29323C),
+                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 243, 237, 229):Color(0xFF485563),
+                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 96, 231, 72):Color(0xFF29323C),
             ],
           )
       ),
@@ -127,9 +125,7 @@ class _SeguroViewState extends State<SeguroView> {
                     size: 50.0,
                   ),
                   onPressed: (){
-                    Navigator.push(context,MaterialPageRoute(
-                      builder: (ctx)=> SeguroData(seguro: widget.seguro)
-                    ));
+                    widget.navegar(widget.seguro);
                   },
                 ),
               ),

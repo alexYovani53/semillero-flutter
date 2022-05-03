@@ -1,5 +1,6 @@
 
 
+import 'package:applogin/bloc/seguro_bloc/seguro_bloc.dart';
 import 'package:applogin/main.dart';
 import 'package:applogin/model/cliente/cliente.dart';
 import 'package:applogin/model/seguro/seguro.dart';
@@ -7,13 +8,13 @@ import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/repository/seguro_repository.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
 class SeguroData extends StatelessWidget {
 
   Seguro seguro;
-
   SeguroData({ 
     Key? key,
     required this.seguro
@@ -44,37 +45,58 @@ class SeguroData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
+    // final SeguroBloc block = BlocProvider.of<SeguroBloc>(context);
     final DateFormat  formatter = DateFormat('yyyy-MM-dd');
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(seguro.numeroPoliza.toString())
+    return BlocProvider(
+      create: (context)=>SeguroBloc(),
+      child: BlocListener<SeguroBloc,SeguroState>(
+        listener: (context, state) {
+          switch (state.runtimeType) {
+            case EliminarSeguroState:
+              Navigator.pop(context,{"eliminado":seguro.numeroPoliza});
+              break;
+            default:
+          }
+        },
+        child: BlocBuilder<SeguroBloc,SeguroState>(
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(seguro.numeroPoliza.toString())
+              ),
+              body: Container(
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  getRow(seguro.numeroPoliza.toString()),
+                  getRow(seguro.ramo),
+                  getRow(seguro.dniCl.toString()),
+                  getRow(formatter.format(seguro.fechaInicio)),
+                  getRow(formatter.format(seguro.fechaVencimiento)),
+                  IconButton(
+                    color: Colors.black87,
+                    icon: const Icon(Icons.delete),
+                    onPressed: ()async{
+                      
+                        //SeguroRepository.shared.deleteWhere(tableName: "seguros",whereClause: "numeroPoliza = ?",whereArgs: ['${seguro.numeroPoliza}']);  
+
+                        BlocProvider.of<SeguroBloc>(context).add(ElimnarSeguroEvent(numberPoliza: seguro.numeroPoliza));   
+
+                        //final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'cliente/Delete/${seguro.numeroPoliza}', type: HttpType.DELETE);
+                      
+                      
+                  })
+                  
+                ],
+              ),
+              )
+            );
+          },
+        ),
       ),
-      body: Container(
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          getRow(seguro.numeroPoliza.toString()),
-          getRow(seguro.ramo),
-          getRow(seguro.dniCl.toString()),
-          getRow(formatter.format(seguro.fechaInicio)),
-          getRow(formatter.format(seguro.fechaVencimiento)),
-          IconButton(
-            color: Colors.black87,
-            icon: const Icon(Icons.delete),
-            onPressed: ()async{
-              if(true ){
-                SeguroRepository.shared.deleteWhere(tableName: "seguros",whereClause: "numeroPoliza = ?",whereArgs: ['${seguro.numeroPoliza}']);  
-                Navigator.pop(context);       
-              }else{
-                final data =  await ApiManager.shared.request(baseUrl: dotenv.env['BASE_URL']!, uri: 'cliente/Delete/${seguro.numeroPoliza}', type: HttpType.DELETE);
-              }
-              
-          })
-          
-        ],
-      ),
-      )
     );
+    
   }
 }

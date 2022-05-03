@@ -13,7 +13,9 @@ class TableManager{
   }
 
   Future<void> cliente(Database db) async {
-    const String table = "CREATE TABLE cliente (dniCl integer not null primary key autoincrement, "+
+    const String table = "CREATE TABLE cliente ( "+
+    "id integer not null primary key autoincrement, "+
+    "dniCl integer,"
     "nombreCl     text, "+
     "apellido1    text, "+
     "apellido2    text, "+
@@ -30,7 +32,8 @@ class TableManager{
 
     Future<void> seguro(Database db) async {
     const String table = "CREATE TABLE seguros ( " +
-      "numeroPoliza           integer not null primary key autoincrement, " +
+      "id integer not null primary key autoincrement, " +
+      "numeroPoliza           integer,"
       "ramo                     text, " +
       "fechaInicio             text, " +
       "fechaVencimiento        text, " +
@@ -43,7 +46,8 @@ class TableManager{
 
   Future<void> siniestro(Database db) async {
     const String table = "CREATE TABLE siniestros ( "+
-    "idSiniestro    integer NOT NULL primary key autoincrement, "+
+    "id integer NOT NULL primary key autoincrement, "+
+    "idSiniestro    integer, "
     "fechaSiniestro text, "+
     "causas          text, "+
     "aceptado        text, "+

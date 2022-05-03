@@ -37,8 +37,8 @@ class GradientBack extends StatelessWidget {
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFf7f8f8):Color(0xFF000000),
-                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFacbb78):Color(0xFF434343),
+                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 255, 255, 255):Color(0xFF000000),
+                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 120, 187, 187):Color(0xFF434343),
             ],
           )
       ),

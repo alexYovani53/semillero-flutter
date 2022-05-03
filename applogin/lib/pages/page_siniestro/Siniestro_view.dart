@@ -14,9 +14,11 @@ import 'package:flutter/material.dart';
 class SiniestroView extends StatefulWidget {
   
   Siniestro siniestro;
+  Function(Siniestro siniestro) navegar;
 
   SiniestroView({    
-    required this.siniestro
+    required this.siniestro,
+    required this.navegar
   });
 
 
@@ -38,15 +40,11 @@ class _SiniestroViewState extends State<SiniestroView> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(50.00)),
         gradient:  LinearGradient(
-            stops: [
-                    0.50, 
-                    0.99, 
-                    ],
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFcac531):Color(0xFF485563),
-                  MyApp.themeNotifier.value == ThemeMode.light? Color(0xFFf3f9a7):Color(0xFF29323C),
+                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 243, 237, 229):Color(0xFF485563),
+                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 96, 231, 72):Color(0xFF29323C),
             ],
           )
       ),
@@ -124,9 +122,12 @@ class _SiniestroViewState extends State<SiniestroView> {
                     size: 50.0,
                   ),
                   onPressed: (){
-                    Navigator.push(context,MaterialPageRoute(
-                      builder: (ctx)=> SiniestroData(siniestro: widget.siniestro)
-                    ));
+
+                    widget.navegar(widget.siniestro);
+                    // Navigator.push(context,MaterialPageRoute(
+                    //   builder: (ctx)=> SiniestroData(siniestro: widget.siniestro)
+                    // ));
+
                   },
                 ),
               ),

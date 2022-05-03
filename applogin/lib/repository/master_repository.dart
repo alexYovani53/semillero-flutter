@@ -19,6 +19,13 @@ abstract class MasterRepository {
 
   }
 
+  
+  Future<void> truncate({required String tableName}) async {
+    print("TRUNCANDOOOOO TABLA");
+    Database dbManager = await DbManager().db;
+    dbManager.execute("DELETE FROM $tableName");
+  }
+
   Future<void> delete({required String tableName}) async {
     Database dbManager = await DbManager().db;
     dbManager.delete(tableName);

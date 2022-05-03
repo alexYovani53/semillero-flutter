@@ -24,7 +24,7 @@ class TextInput extends StatelessWidget {
   OutlineInputBorder getBorde (){
    const borde= OutlineInputBorder(
             borderSide: BorderSide(
-              color: Color.fromARGB(255, 255, 255, 255)
+              color: Color.fromARGB(255, 7, 7, 7)
             ),
             borderRadius: BorderRadius.all(Radius.circular(15.0))
           );
@@ -39,24 +39,26 @@ class TextInput extends StatelessWidget {
       padding: EdgeInsets.only(right: 20.0, left: 20.0,top: 10.0),
       child: TextFormField(
         keyboardType: inputType ,
+        autocorrect: true,
         maxLines: 1,
         controller: controller,
+        
         decoration: InputDecoration(
           filled: true,
-          fillColor: Theme.of(context).backgroundColor,
           border: InputBorder.none,
           hintText: hintText,
-          prefixIcon: Padding(
+          suffixIcon: Padding(
             padding: const EdgeInsets.all(2.0), // add padding to adjust icon
             child: Icon(icono),
           ),
-          errorBorder: getBorde(),
-          enabledBorder: getBorde(),
-          focusedBorder: getBorde(),
-          focusedErrorBorder:  getBorde()
+          errorBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          focusedErrorBorder:  InputBorder.none
         ),
         validator: (value){
           return validator(value!);
+          
         }
       ),
     );

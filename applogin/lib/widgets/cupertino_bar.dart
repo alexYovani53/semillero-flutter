@@ -39,6 +39,24 @@ class CuppertinoBar extends StatelessWidget {
           ],
         ) , 
         tabBuilder: (BuildContext context, int index){
+          // switch (index) {
+          //   case 0:
+          //     return CupertinoTabView(builder: (BuildContext context) {                
+          //       return PageClient();
+          //     });
+          //   case 1:
+          //     return CupertinoTabView(builder: (BuildContext context) {                
+          //       return PageSeguro();
+          //     });
+          //   case 2:
+          //     return CupertinoTabView(builder: (BuildContext context) {                
+          //       return PageSiniestro();
+          //     });
+          //   default:
+          //     return CupertinoTabView(builder: (BuildContext context) {                
+          //       return PageClient();
+          //     });
+          // }
           switch (index) {
             case 0:
               return PageClient();

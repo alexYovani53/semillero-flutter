@@ -1,8 +1,5 @@
-import 'package:applogin/bloc/basic_bloc.dart';
-import 'package:applogin/main.dart';
+
 import 'package:applogin/widgets/encabezado_pages.dart';
-import 'package:applogin/widgets/theme_mode_button.dart';
-import 'package:applogin/widgets/gradient_back.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';

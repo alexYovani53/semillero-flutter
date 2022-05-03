@@ -28,6 +28,8 @@ class DbManager{
       }).catchError((onError) {
         databaseDeleted = false;
       });
+
+      print("ELIMINANDO BASE DE DATOS");
     } on DatabaseException catch (error) {
       print(error);
     } catch (error) {
