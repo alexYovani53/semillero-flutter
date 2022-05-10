@@ -1,14 +1,19 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:applogin/bloc/cliente_bloc/cliente_bloc.dart';
+import 'package:applogin/localizations/localizations.dart';
 import 'package:applogin/model/cliente/cliente.dart';
 import 'package:applogin/provider/api_cliente_provider.dart';
 import 'package:applogin/provider/api_manager.dart';
+import 'package:applogin/provider/languaje_provider.dart';
 import 'package:applogin/repository/cliente_repository.dart';
+import 'package:applogin/utils/app_string.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/button_green.dart';
-import 'package:applogin/widgets/text_input.dart';
+import 'package:applogin/widgets/text_input_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 class AddClient extends StatefulWidget {
 
@@ -24,11 +29,10 @@ class AddClient extends StatefulWidget {
 }
 
 class _AddClientState extends State<AddClient> {
-
-  
   Map<String, dynamic> body = <String,dynamic>{};
   bool formularioActivo = false;
   final formKey = GlobalKey<FormState>();  
+  late AppLocalizations dictionary;
 
   final controllerNombre = TextEditingController();
   final controllerApp1 = TextEditingController();
@@ -67,55 +71,55 @@ class _AddClientState extends State<AddClient> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
 
-                TextInput(inputType: TextInputType.text, hintText: "Nombre",controller: controllerNombre, icono: Icons.mail , validator: (String data){
+                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteNombre),controller: controllerNombre, icono: Icons.mail , validator: (String data){
                     if(data.isEmpty){
-                      return "Ingrese un nombre";
+                      return dictionary.dictionary(Strings.formClienteValidatorNombre);
                     } return null;
                 }),
 
-                TextInput(inputType: TextInputType.text, hintText: "Apellido 1",controller: controllerApp1,icono: Icons.password, validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteApellido1),controller: controllerApp1,icono: Icons.password, validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese primer apellido";
+                      return dictionary.dictionary(Strings.formClienteValidatorApellido1);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.text, hintText: "Apellido 2",controller: controllerApp2,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteApellido2),controller: controllerApp2,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese segundo apellido";
+                      return dictionary.dictionary(Strings.formClienteValidatorApellido2);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.text, hintText: "Clase Via",controller: controllerClaseVia,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteClaseVia),controller: controllerClaseVia,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Llenar clase via";
+                      return dictionary.dictionary(Strings.formClienteValidatorClaseVia);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.number, hintText: "Numero Via",controller: controllerNumeroVia,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.number, hintText: dictionary.dictionary(Strings.formClienteNumeroVia),controller: controllerNumeroVia,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese numero via";
+                      return dictionary.dictionary(Strings.formClienteValidatorNumeroVia);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.text, hintText: "Nombre Via", controller: controllerNombreVia,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteNombreVia), controller: controllerNombreVia,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese nombre via";
+                      return dictionary.dictionary(Strings.formClienteValidatorNombreVia);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.number, hintText: "Cod. Postal", controller: controllerCodPostal,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.number, hintText: dictionary.dictionary(Strings.formClienteCodPostal), controller: controllerCodPostal,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese su codigo postal";
+                      return dictionary.dictionary(Strings.formClienteValidatorCodPostal);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.text, hintText: "Ciudad", controller: controllerCiudad,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteCiudad), controller: controllerCiudad,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese su ciudad";
+                      return dictionary.dictionary(Strings.formClienteValidatorCiudad);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.number, hintText: "Telefono",controller: controllerTelefono,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.number, hintText: dictionary.dictionary(Strings.formClienteTelefono),controller: controllerTelefono,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese un número telefonico";
+                      return dictionary.dictionary(Strings.formClienteValidatorNumeroVia);
                     } return null;
                   }),
-                TextInput(inputType: TextInputType.text, hintText: "Observaciones",controller: controllerObservaciones,icono: Icons.password,validator: (String data){ 
+                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteObservaciones),controller: controllerObservaciones,icono: Icons.password,validator: (String data){ 
                     if(data.isEmpty){
-                      return "Ingrese alguna opservacion";
+                      return dictionary.dictionary(Strings.formClienteValidatorObservaciones);
                     } return null;
                   }),
                  
@@ -123,7 +127,7 @@ class _AddClientState extends State<AddClient> {
                   margin: EdgeInsets.only(bottom: 50.0),
                   child: 
                     ButtonGreen(
-                      texto: "Registrar", 
+                      texto: dictionary.dictionary(Strings.buttonRegistrar), 
                       onPressed: ()async{
                           if (formKey.currentState!.validate()){
                             
@@ -158,19 +162,17 @@ class _AddClientState extends State<AddClient> {
                               controllerNombre.text ="";
                               controllerNombreVia.text ="";
                               controllerNumeroVia.text ="";
-
+                              showFlushBar(dictionary.dictionary(Strings.pageClienteTitle), dictionary.dictionary(Strings.formClienteMessageRegister));
                               BlocProvider.of<ClienteBloc>(context).add(SalirRegistroClienteEvent());
                               
                             }
-                          }
-                          
+                          }                          
                         }, 
                     )
                 )
               ],
             ),
-          ) 
-    
+          )     
         ],
       );
 
@@ -179,6 +181,9 @@ class _AddClientState extends State<AddClient> {
 
   @override
   Widget build(BuildContext context) {
+
+    final lang = Provider.of<LanguajeProvider>(context);
+    dictionary = AppLocalizations(lang.getLanguaje);  
 
     return  BlocProvider(
       create: (context) => ClienteBloc(),
@@ -206,5 +211,21 @@ class _AddClientState extends State<AddClient> {
         )
       ),
     );
+  }
+  showFlushBar(String titulo, String texto){
+    Flushbar(
+      title:  titulo,
+      message:  texto,
+      duration:  const Duration(seconds: 6),            
+      margin:    const EdgeInsets.only(top: 8, bottom: 55.0, left: 8, right: 8),
+      borderRadius: BorderRadius.circular(8),
+      icon: Icon(
+        Icons.info_outline,
+        size: 28.0,
+        color: Colors.blue[300],
+      ),
+      flushbarPosition: FlushbarPosition.TOP,
+      leftBarIndicatorColor: Colors.blue[300],
+    ).show(context);
   }
 }

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 
-class TextInput extends StatelessWidget {
+class TextInputCustom extends StatelessWidget {
 
 
   final String hintText;
@@ -12,7 +12,7 @@ class TextInput extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType inputType;
 
-  const TextInput({ 
+  const TextInputCustom({ 
     Key? key,
     required this.inputType,
     required this.hintText,
@@ -42,6 +42,7 @@ class TextInput extends StatelessWidget {
         autocorrect: true,
         maxLines: 1,
         controller: controller,
+        autofocus: false,
         
         decoration: InputDecoration(
           filled: true,

@@ -1,7 +1,9 @@
 
 import 'package:applogin/main.dart';
+import 'package:applogin/provider/themeProvider.dart';
 import 'package:applogin/repository/firebase/realtime_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ThemeModeButton extends StatelessWidget {
   
@@ -10,6 +12,8 @@ class ThemeModeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final ThemeProvider theme =Provider.of<ThemeProvider>(context);
     
     return StreamBuilder(
       stream:realtime.stream() ,
@@ -24,12 +28,12 @@ class ThemeModeButton extends StatelessWidget {
 
 
             if (estado == "claro"){
-              MyApp.themeNotifier.value == ThemeMode.dark;
+              theme.setTheme = ThemeMode.dark;
             }else{
-              MyApp.themeNotifier.value == ThemeMode.light;
+              theme.setTheme = ThemeMode.light;
             }
 
-            return appBar(snapshot);
+            return appBar(snapshot,theme);
           default:
             return const CircularProgressIndicator();
         }
@@ -40,19 +44,19 @@ class ThemeModeButton extends StatelessWidget {
     );
   }
 
-  Widget appBar(AsyncSnapshot snapshot){
+  Widget appBar(AsyncSnapshot snapshot, ThemeProvider theme){
 
     final estado = snapshot.data.snapshot.value['theme'] as String;
     
     return  
     IconButton(
-      icon: Icon(MyApp.themeNotifier.value == ThemeMode.light
+      icon: Icon(theme.getTheme == ThemeMode.light
           ? Icons.dark_mode
           : Icons.light_mode),
       onPressed: () {
         realtime.updateThemeMode();
-        MyApp.themeNotifier.value =
-            MyApp.themeNotifier.value == ThemeMode.light
+        theme.setTheme =
+            theme.getTheme == ThemeMode.light
                 ? ThemeMode.dark
                 : ThemeMode.light;
       });

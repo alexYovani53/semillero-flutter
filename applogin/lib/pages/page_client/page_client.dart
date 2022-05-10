@@ -1,18 +1,23 @@
 
 import 'package:applogin/bloc/cliente_bloc/cliente_bloc.dart';
+import 'package:applogin/localizations/localizations.dart';
 import 'package:applogin/model/cliente/cliente.dart';
 import 'package:applogin/model/cliente/cliente_list.dart';
 import 'package:applogin/pages/page_client/add_client.dart';
 import 'package:applogin/pages/page_client/client_data.dart';
 import 'package:applogin/pages/page_client/list_client.dart';
+import 'package:applogin/pages/page_setting/page_setting.dart';
 import 'package:applogin/provider/api_cliente_provider.dart';
 import 'package:applogin/provider/api_manager.dart';
+import 'package:applogin/provider/languaje_provider.dart';
 import 'package:applogin/repository/cliente_repository.dart';
+import 'package:applogin/utils/app_string.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 
 class PageClient extends StatefulWidget {
@@ -24,15 +29,14 @@ class PageClient extends StatefulWidget {
 
 class _PageClientState extends State<PageClient> {
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-    new GlobalKey<RefreshIndicatorState>();
-
-  static bool clienteCargado = false;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   
   ClienteList clientList = ClienteList.fromDefault();
   Map<String, dynamic> body = <String,dynamic>{};
   bool formularioActivo = false;
   final formKey = GlobalKey<FormState>();  
+  
+  late AppLocalizations diccionary;
 
   Future<void> actualizarData () async{
 
@@ -57,32 +61,6 @@ class _PageClientState extends State<PageClient> {
 
   }
   
-  // @override
-  // void didUpdateWidget(covariant PageClient oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   actualizarData();
-  // }
-
-  // void editar(Cliente edit){
-                      
-  //   body["dniCl"] = edit.dniCl;
-  //   controllerCiudad.text = edit.ciudad;
-  //   controllerObservaciones.text =edit.observaciones;
-  //   controllerCodPostal.text = edit.codPostal.toString();
-  //   controllerTelefono.text = edit.telefono.toString();
-  //   controllerApp1.text = edit.apellido1;
-  //   controllerApp2.text = edit.apellido2;
-  //   controllerClaseVia.text =edit.claseVia;
-  //   controllerNombre.text =edit.nombreCl;
-  //   controllerNombreVia.text =edit.nombreVia;
-  //   controllerNumeroVia.text =edit.numeroVia.toString()  ;
-
-  //   setState(() {
-  //     formularioActivo = true;
-  //   });
-                            
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -92,6 +70,9 @@ class _PageClientState extends State<PageClient> {
 
   @override
   Widget build(BuildContext context) {  
+    
+    final LanguajeProvider lang = Provider.of<LanguajeProvider>(context,listen: false);
+    diccionary = AppLocalizations(lang.getLanguaje);
       
     return BlocProvider(
 
@@ -129,7 +110,7 @@ class _PageClientState extends State<PageClient> {
               child: Scaffold(
                 body: Stack(
                   children: [          
-                    EncabezadoPages(titulo: "Clientes"),            
+                    EncabezadoPages(titulo: diccionary.dictionary(Strings.pageClienteTitle)),            
                     Container(
                       margin: EdgeInsets.only(top: 100.0),
                       child:  ListView(
@@ -143,23 +124,23 @@ class _PageClientState extends State<PageClient> {
                                 }, 
                                 icon: const Icon(Icons.add)
                               ),
-                              ElevatedButton.icon(
+                              TextButton(
                                 onPressed: () async {
                                   await ClienteRepository.shared.addColumn(tableName: "cliente", columnName: "clienteNewColumn");
                                   await ClienteRepository.shared.update(tableName: "cliente", columnName: "clienteNewColumn",value: "Data - generada");
                                   await actualizarData();
                                 }, 
-                                icon: Icon(Icons.add), 
-                                label: Text("Add column")
+                                child: Text(diccionary.dictionary(Strings.pageClienteAgregarColumna))
                               )
                             ],
                           ),
                           Container(
-                              child: ListClient(
-                                listaCliente: clientList,
-                                navegar: (Cliente client){
-                                  BlocProvider.of<ClienteBloc>(context).add(VerClienteEvent(client: client));
-                                })
+                            child: ListClient(
+                              listaCliente: clientList,
+                              navegar: (Cliente client){
+                                BlocProvider.of<ClienteBloc>(context).add(VerClienteEvent(client: client));
+                              }
+                            )
                           )  
                         ],
                       ),
@@ -169,10 +150,8 @@ class _PageClientState extends State<PageClient> {
               )
             );
           },
-
         )
-      )
-        
+      )        
     );
   }
 }

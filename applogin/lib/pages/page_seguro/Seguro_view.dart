@@ -7,8 +7,10 @@ import 'package:applogin/model/cliente/cliente_list.dart';
 import 'package:applogin/model/seguro/seguro.dart';
 import 'package:applogin/pages/page_client/client_data.dart';
 import 'package:applogin/pages/page_seguro/Seguro_data.dart';
+import 'package:applogin/provider/themeProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SeguroView extends StatefulWidget {
   
@@ -32,7 +34,7 @@ class _SeguroViewState extends State<SeguroView> {
   Widget build(BuildContext context) {
 
     final DateFormat  formatter = DateFormat('yyyy-MM-dd');
-
+    final ThemeProvider theme =Provider.of<ThemeProvider>(context);
       
     return Container(
       margin: const EdgeInsets.only(
@@ -46,8 +48,8 @@ class _SeguroViewState extends State<SeguroView> {
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 243, 237, 229):Color(0xFF485563),
-                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 96, 231, 72):Color(0xFF29323C),
+                  theme.getTheme == ThemeMode.light? Color.fromARGB(255, 243, 237, 229):Color(0xFF485563),
+                  theme.getTheme == ThemeMode.light? Color.fromARGB(255, 96, 231, 72):Color(0xFF29323C),
             ],
           )
       ),

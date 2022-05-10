@@ -1,5 +1,6 @@
 
 import 'package:applogin/bloc/siniestro_bloc/siniestro_bloc.dart';
+import 'package:applogin/localizations/localizations.dart';
 import 'package:applogin/model/siniestro/siniestro.dart';
 import 'package:applogin/model/siniestro/siniestro_list.dart';
 import 'package:applogin/pages/page_siniestro/Siniestro_data.dart';
@@ -7,12 +8,15 @@ import 'package:applogin/pages/page_siniestro/list_siniestro.dart';
 import 'package:applogin/pages/page_siniestro/table_siniestro.dart';
 import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/provider/api_siniestro_provider.dart';
+import 'package:applogin/provider/languaje_provider.dart';
 import 'package:applogin/repository/siniestro_repository.dart';
+import 'package:applogin/utils/app_string.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 
 class PageSiniestro extends StatefulWidget {
@@ -24,9 +28,11 @@ class PageSiniestro extends StatefulWidget {
 
 class _PageSiniestroState extends State<PageSiniestro> {
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  
+  
   SiniestroList listaSiniestros = SiniestroList.fromDefault();
+  late AppLocalizations diccionary;
 
   static bool siniestroCargado = false;
   
@@ -75,7 +81,11 @@ class _PageSiniestroState extends State<PageSiniestro> {
 
   @override
   Widget build(BuildContext context) {
- return BlocProvider(
+    
+    final LanguajeProvider lang = Provider.of<LanguajeProvider>(context);
+    diccionary = AppLocalizations(lang.getLanguaje);
+    
+    return BlocProvider(
       create: (context)=>SiniestroBloc(),
       child: BlocListener<SiniestroBloc, SiniestroState>(
         listener: (context, state) {
@@ -110,7 +120,7 @@ class _PageSiniestroState extends State<PageSiniestro> {
               child: Container(
                 child: Stack(
                   children: [          
-                    EncabezadoPages(titulo: "Siniestros"),            
+                    EncabezadoPages(titulo: diccionary.dictionary(Strings.pageSiniestroTitle)),            
                     Container(
                       margin: EdgeInsets.only(top: 100.0),
                       child:  ListView(
@@ -137,8 +147,5 @@ class _PageSiniestroState extends State<PageSiniestro> {
         ),
       ),
     );
-    
-    
-
   }
 }

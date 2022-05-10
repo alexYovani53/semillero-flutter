@@ -9,7 +9,9 @@ import 'package:applogin/model/siniestro/siniestro.dart';
 import 'package:applogin/pages/page_client/client_data.dart';
 import 'package:applogin/pages/page_seguro/Seguro_data.dart';
 import 'package:applogin/pages/page_siniestro/Siniestro_data.dart';
+import 'package:applogin/provider/themeProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SiniestroView extends StatefulWidget {
   
@@ -31,6 +33,7 @@ class _SiniestroViewState extends State<SiniestroView> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider theme =Provider.of<ThemeProvider>(context);
     return Container(
       margin: const EdgeInsets.only(
         top: 5.0,
@@ -43,8 +46,8 @@ class _SiniestroViewState extends State<SiniestroView> {
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 243, 237, 229):Color(0xFF485563),
-                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 96, 231, 72):Color(0xFF29323C),
+                  theme.getTheme == ThemeMode.light? Color.fromARGB(255, 243, 237, 229):Color(0xFF485563),
+                  theme.getTheme == ThemeMode.light? Color.fromARGB(255, 96, 231, 72):Color(0xFF29323C),
             ],
           )
       ),

@@ -1,5 +1,7 @@
 import 'package:applogin/main.dart';
+import 'package:applogin/provider/themeProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GradientBack extends StatelessWidget {
 
@@ -18,6 +20,7 @@ class GradientBack extends StatelessWidget {
 
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+        final ThemeProvider theme =Provider.of<ThemeProvider>(context);
 
     height ??= screenHeight;
 
@@ -37,8 +40,8 @@ class GradientBack extends StatelessWidget {
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 255, 255, 255):Color(0xFF000000),
-                  MyApp.themeNotifier.value == ThemeMode.light? Color.fromARGB(255, 120, 187, 187):Color(0xFF434343),
+                  theme.getTheme == ThemeMode.light? Color.fromARGB(255, 255, 255, 255):Color(0xFF000000),
+                  theme.getTheme == ThemeMode.light? Color.fromARGB(255, 120, 187, 187):Color(0xFF434343),
             ],
           )
       ),

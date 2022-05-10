@@ -1,20 +1,30 @@
 
 import 'package:applogin/bloc/basic_bloc/basic_bloc.dart';
-import 'package:applogin/main.dart';
+import 'package:applogin/localizations/localizations.dart';
+import 'package:applogin/pages/page_setting/page_setting.dart';
 import 'package:applogin/provider/api_local_auth.dart';
 import 'package:applogin/provider/api_login.dart';
+import 'package:applogin/provider/languaje_provider.dart';
+import 'package:applogin/provider/themeProvider.dart';
 import 'package:applogin/repository/firebase/realtime_repository.dart';
+import 'package:applogin/utils/app_messages.dart';
+import 'package:applogin/utils/app_preferences.dart';
+import 'package:applogin/utils/app_string.dart';
 import 'package:applogin/widgets/button_green.dart';
 import 'package:applogin/widgets/cupertino_bar.dart';
-import 'package:applogin/widgets/text_input.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:applogin/widgets/text_input_custom.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validators/validators.dart';
 
 import 'package:encrypt/encrypt.dart' as encriptador;
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
+import 'package:local_auth/src/types/error_codes.dart' as auth_error;
+import 'package:open_settings/open_settings.dart';
 
 import 'package:another_flushbar/flushbar.dart';
 
@@ -34,8 +44,10 @@ class _PageLoginState extends State<PageLogin> {
   final controllerContrasena = TextEditingController();    
   final keys =  encriptador.Key.fromUtf8("12345678901234567890123456789012");
   final iv = encriptador.IV.fromLength(16);
+
+  late AppLocalizations diccionary;
   
-  bool _isChecked = false;
+  bool isCheckedRemember = false;
 
   // BIOMETRIA
   final LocalAuthentication auth = LocalAuthentication();
@@ -50,6 +62,10 @@ class _PageLoginState extends State<PageLogin> {
   Widget build(BuildContext context) {
 
     final BasicBloc blocPrincipal = BlocProvider.of<BasicBloc>(context);
+    final ThemeProvider theme =Provider.of<ThemeProvider>(context);
+    final LanguajeProvider lang = Provider.of<LanguajeProvider>(context,listen: false);
+    diccionary = AppLocalizations(lang.getLanguaje);
+
 
         return Scaffold(
           body: BlocProvider(
@@ -69,16 +85,25 @@ class _PageLoginState extends State<PageLogin> {
               child: BlocBuilder<BasicBloc, BasicState>(
                 builder: (context, state) {
                   if (state is AppStarted) print('aplicacion iniciada');
-                  return loginContent(blocPrincipal);
+                  return loginContent(blocPrincipal, theme,diccionary);
                 },
               ),
             ),
+          ),
+          
+          floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+          floatingActionButton: FloatingActionButton(
+            tooltip: "+",
+            child: Icon(Icons.settings),
+            onPressed: (){
+              Navigator.push(context,MaterialPageRoute(builder: (ctx) => const PageSetting()));
+            },
           ),
         );
 
   }
 
-  Widget loginContent(Bloc blocPrincipal){
+  Widget loginContent(Bloc blocPrincipal,ThemeProvider theme, AppLocalizations localizations){
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -88,9 +113,9 @@ class _PageLoginState extends State<PageLogin> {
             begin: Alignment.topLeft,
             end:Alignment.bottomRight,
             colors: [
-              MyApp.themeNotifier.value == ThemeMode.light?Color(0xFF8A2387):Color.fromARGB(255, 58, 15, 56),
-              MyApp.themeNotifier.value == ThemeMode.light?Color(0xFFE94057):Color.fromARGB(255, 128, 35, 47),
-              MyApp.themeNotifier.value == ThemeMode.light?Color(0xFFF27121):Color.fromARGB(255, 131, 62, 19),
+              theme.getTheme == ThemeMode.light?Color(0xFF8A2387):Color.fromARGB(255, 58, 15, 56),
+              theme.getTheme == ThemeMode.light?Color(0xFFE94057):Color.fromARGB(255, 128, 35, 47),
+              theme.getTheme == ThemeMode.light?Color(0xFFF27121):Color.fromARGB(255, 131, 62, 19),
             ]
           )
         ),
@@ -103,13 +128,12 @@ class _PageLoginState extends State<PageLogin> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [                  
                 IconButton(
-                  icon: Icon(MyApp.themeNotifier.value == ThemeMode.light
+                  icon: Icon(theme.getTheme == ThemeMode.light
                       ? Icons.dark_mode
                       : Icons.light_mode),
                   onPressed: () {
-                    realtime.updateThemeMode();
-                    MyApp.themeNotifier.value =
-                        MyApp.themeNotifier.value == ThemeMode.light
+                    theme.setTheme =
+                        theme.getTheme == ThemeMode.light
                             ? ThemeMode.dark
                             : ThemeMode.light;
                   }
@@ -121,7 +145,7 @@ class _PageLoginState extends State<PageLogin> {
               height: 480,
               width: 325,
               decoration: BoxDecoration(
-                color: MyApp.themeNotifier.value == ThemeMode.light? Colors.white : Color.fromARGB(255, 113, 125, 131),
+                color: theme.getTheme == ThemeMode.light? Colors.white : Color.fromARGB(255, 113, 125, 131),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Form(
@@ -130,35 +154,33 @@ class _PageLoginState extends State<PageLogin> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Bienvenido",
-                      style: TextStyle(
+                    Text(
+                      localizations.dictionary(Strings.loginTextLabel1),
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 35,
                         fontWeight: FontWeight.bold
                       ),
                     ),
-                    TextInput(inputType: TextInputType.emailAddress, hintText: "you@example.com", validator: validarCorreo,controller: controllerCorreo, icono: Icons.mail,),
+                    TextInputCustom(inputType: TextInputType.emailAddress, hintText: "you@example.com", validator: validarCorreo,controller: controllerCorreo, icono: Icons.mail,),
 
-                    TextInput(inputType: TextInputType.text, hintText: "Contrasena", validator: validarContrasena,controller: controllerContrasena,icono: Icons.password),
+                    TextInputCustom(inputType: TextInputType.text, hintText: localizations.dictionary(Strings.loginPassword), validator: validarContrasena,controller: controllerContrasena,icono: Icons.password),
                     
 
 
                     ButtonGreen(
-                      texto: "Login", 
+                      texto: localizations.dictionary(Strings.loginTextButton), 
                       onPressed: ()async{
-                          if (formKey.currentState!.validate()){
 
+                          await loadContrasena();
+                          if (formKey.currentState!.validate()){
                             await ejecutarLogin(controllerCorreo.text, controllerContrasena.text ,blocPrincipal);
-                            
                           }else{
                             await Future.delayed(const Duration(seconds: 2), () {
                               formKey.currentState!.reset();
                             }); 
                           }
                           
-                          controllerCorreo.text = "";
-                          controllerContrasena.text ="";
                         }, 
                     ),
                     Container(
@@ -175,15 +197,15 @@ class _PageLoginState extends State<PageLogin> {
                               ),
                               child: Checkbox(
                                 activeColor: Color(0xff00C8E8),
-                                value: _isChecked,
+                                value: isCheckedRemember,
                                 onChanged: _handleRemeberme,
                               ),
                             )
                           ),
                           SizedBox(width: 10.0),
-                          Text("Remember Me",
+                          Text(localizations.dictionary(Strings.loginRemember),
                             style: TextStyle(
-                            color:MyApp.themeNotifier.value == ThemeMode.light? Color(0xff646464): Color.fromARGB(255, 224, 223, 223),
+                            color:theme.getTheme == ThemeMode.light? Color(0xff646464): Color.fromARGB(255, 224, 223, 223),
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Rubic')
@@ -216,54 +238,57 @@ class _PageLoginState extends State<PageLogin> {
     return null;
   }
 
-  showAlertDialog(BuildContext context) {  
-    // Create button  
-    Widget okButton = ButtonGreen(  
-      texto: "Ok",
-      onPressed: () {  
-        Navigator.of(context).pop();  
-      },  
-    );  
-    
-    // Create AlertDialog  
-    AlertDialog alert = AlertDialog(  
-      title: Text("!Error¡"),  
-      content: Text("Datos no validos"),  
-      actions: [  
-        okButton,  
-      ],  
-    );  
-    
-    // show the dialog  
-    showDialog(  
-      context: context,  
-      builder: (BuildContext context) {  
-        return alert;  
-      },  
-    );  
-  }  
 
 
   void _loadUserEmailPassword() async {
 
     try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      if (_prefs.containsKey("remember_me")){
-        var email = _prefs.getString("email") ?? "";
-        var password = _prefs.getString("password") ?? "";
-        var remeberMe = _prefs.getBool("remember_me") ?? false;
 
-        if (remeberMe) {
-          setState(() {
-            _isChecked = true;
-          });
-          controllerCorreo.text = email ;
-          bool pasoPrueba = await ApiLocalAuth.shared.authenticateBiometrics();
+      AppPreferences.shared.contains(AppPreferences.APP_REMEMBER).then((bool value) async {
+        if (value){
+          String email = await AppPreferences.shared.getString(AppPreferences.APP_EMAIL) ?? "";
+          bool remember = await AppPreferences.shared.getBool(AppPreferences.APP_REMEMBER) ?? false;
 
-          if(pasoPrueba){
-            final decryptedPass = decrypt(password);
-            controllerContrasena.text = decryptedPass;
+          if (remember) {
+            setState(() {
+              isCheckedRemember = true;
+            });
+            controllerCorreo.text = email ;
+            // bool pasoPrueba = await ApiLocalAuth.shared.authenticateBiometrics();
+
+            // if(pasoPrueba){
+            //   final decryptedPass = decrypt(password);
+            //   controllerContrasena.text = decryptedPass;
+            // }
           }
+        }
+      });
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> loadContrasena() async{
+  
+    try{
+
+      if (isCheckedRemember && controllerContrasena.text == ""){
+          String password = await AppPreferences.shared.getString(AppPreferences.APP_PASSWORD) ?? "";
+          bool remember = await AppPreferences.shared.getBool(AppPreferences.APP_REMEMBER) ?? false;
+
+        if (remember) {
+          setState(() {
+            isCheckedRemember = true;
+          });
+          
+          authenticateBiometrics().then((statusOk){
+            if(statusOk){
+              final decryptedPass = decrypt(password);
+              controllerContrasena.text = decryptedPass;
+            }
+          });
+
         }
       }
     } catch (e) {
@@ -271,12 +296,23 @@ class _PageLoginState extends State<PageLogin> {
     }
   }
 
-  void _handleRemeberme(bool? value) {
-    _isChecked = value!;
-    //saveSharedPreference(value);
-    setState(() {
-      _isChecked = value;
+  void _handleRemeberme(bool? value) async {
+
+    await hasBiometrics().then((hasBiometrics) => {
+      if(hasBiometrics == true){
+        isCheckedRemember = value!,
+        setState(() {
+          isCheckedRemember = value;
+        })
+      }
+      else{
+        setState(() {
+          isCheckedRemember = false;
+        }),
+        AppMessages.shared.showAlertDialog(context,"!Biometria!","No se cuenta con sensor de huella para usar esta funcionalidad",(){})
+      }
     });
+
   }
   
   Future<void> saveSharedPreference(bool checked) async {
@@ -320,26 +356,85 @@ class _PageLoginState extends State<PageLogin> {
 
   Future<void> ejecutarLogin(String correoLog, String password, Bloc blocPrincipal) async {
 
-    String contrasena   = FirebaseRemoteConfig.instance.getString("contrasena");
-    String correo   = FirebaseRemoteConfig.instance.getString("correo");
+    // String contrasena   = FirebaseRemoteConfig.instance.getString("contrasena");
+    // String correo   = FirebaseRemoteConfig.instance.getString("correo");
 
     bool login = await ApiLogin.shared.ejecutarLogin(correoLog, password);
     if (!login){
-      showAlertDialog(context); 
-      if(_isChecked) {
-        setState(() { _isChecked = false;});
+      AppMessages.shared.showAlertDialog(context,"!Error¡","Datos incorrectos",(){}); 
+      if(isCheckedRemember) {
+        setState(() { isCheckedRemember = false;});
       }
     }else{
-      await saveSharedPreference(_isChecked);
+      await saveSharedPreference(isCheckedRemember);
       blocPrincipal.add(LoginEvent(data:controllerCorreo.text));
     }
   }
 
-  void showFlushBar(String texto, String titulo){
+  Future<bool> hasBiometrics() async {
+
+    try {
+      return await ApiLocalAuth.shared.getAuth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      return false;
+    }
+  }
+
+  Future<List<BiometricType>> getBiometrics() async{
+    try {
+      return await ApiLocalAuth.shared.getAuth.getAvailableBiometrics();
+    } on PlatformException  catch (e) {
+      return <BiometricType>[];
+    }
+  }
+
+  Future<bool> authenticateBiometrics() async{ 
+
+    //final isAvailable = await hasBiometrics();    
+    //if(!isAvailable) return true;
+    
+    final Title = diccionary.dictionary(Strings.biometricsTituloDialog);
+
+    try {
+      return await ApiLocalAuth.shared.getAuth.authenticate(
+        localizedReason: diccionary.dictionary(Strings.biometricsLocalizedReason),
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+        authMessages: <AuthMessages>[
+          AndroidAuthMessages(
+            signInTitle: diccionary.dictionary(Strings.biometricsSingInTitle),
+            cancelButton: diccionary.dictionary(Strings.biometricsCancelButton), 
+            biometricHint:  diccionary.dictionary(Strings.biometricsBiometricHint),
+          ),
+        ]
+      );
+    } on PlatformException  catch (e) {
+      if(e.code == auth_error.notEnrolled){
+        showFlushBar(Title, diccionary.dictionary(Strings.biometricsNoConfigurado));
+        // AppMessages.shared.showAlertDialog(context, "Biometria", "Desea configurar su huella", () { 
+        //    OpenSettings.openSecuritySetting();
+        // });
+      }
+      else if( e.code == auth_error.lockedOut || e.code == auth_error.permanentlyLockedOut){
+        showFlushBar(Title, diccionary.dictionary(Strings.biometricsBloqueado));
+      }
+      else if(e.code == auth_error.notAvailable){
+        showFlushBar(Title, diccionary.dictionary(Strings.biometricsNoDisponible));
+      }
+      return false;
+    }
+
+  }
+
+
+  showFlushBar(String titulo, String texto){
     Flushbar(
       title:  titulo,
       message:  texto,
-      duration:  const Duration(seconds: 3),            
+      duration:  const Duration(seconds: 6),            
       margin:    const EdgeInsets.only(top: 8, bottom: 55.0, left: 8, right: 8),
       borderRadius: BorderRadius.circular(8),
       icon: Icon(

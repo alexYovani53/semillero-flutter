@@ -1,6 +1,8 @@
 
 import 'package:applogin/main.dart';
+import 'package:applogin/provider/themeProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ButtonGreen extends StatelessWidget {
 
@@ -14,6 +16,7 @@ class ButtonGreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider theme =Provider.of<ThemeProvider>(context);
     return InkWell(
       onTap: onPressed,
       child: Container(
@@ -29,9 +32,9 @@ class ButtonGreen extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               
-              MyApp.themeNotifier.value == ThemeMode.light?Color(0xFF8A2387):Color.fromARGB(255, 58, 15, 56),
-              MyApp.themeNotifier.value == ThemeMode.light?Color(0xFFE94057):Color.fromARGB(255, 128, 35, 47),
-              MyApp.themeNotifier.value == ThemeMode.light?Color(0xFFF27121):Color.fromARGB(255, 131, 62, 19),
+              theme.getTheme == ThemeMode.light?Color(0xFF8A2387):Color.fromARGB(255, 58, 15, 56),
+              theme.getTheme == ThemeMode.light?Color(0xFFE94057):Color.fromARGB(255, 128, 35, 47),
+              theme.getTheme == ThemeMode.light?Color(0xFFF27121):Color.fromARGB(255, 131, 62, 19),
             ],
             begin: Alignment.center,
             end: Alignment.centerRight,

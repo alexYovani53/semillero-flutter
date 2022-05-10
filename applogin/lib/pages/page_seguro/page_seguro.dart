@@ -1,5 +1,6 @@
 
 import 'package:applogin/bloc/seguro_bloc/seguro_bloc.dart';
+import 'package:applogin/localizations/localizations.dart';
 import 'package:applogin/model/cliente/cliente_list.dart';
 import 'package:applogin/model/seguro/seguro.dart';
 import 'package:applogin/model/seguro/seguro_list.dart';
@@ -8,13 +9,16 @@ import 'package:applogin/pages/page_seguro/list_client.dart';
 import 'package:applogin/pages/page_seguro/table_seguro.dart';
 import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/provider/api_seguro_provider.dart';
+import 'package:applogin/provider/languaje_provider.dart';
 import 'package:applogin/repository/seguro_repository.dart';
+import 'package:applogin/utils/app_string.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:applogin/pages/page_client/TableClient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 
 class PageSeguro extends StatefulWidget {
@@ -26,11 +30,13 @@ class PageSeguro extends StatefulWidget {
 
 class _PageSeguroState extends State<PageSeguro> {
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   SeguroList seguroList = SeguroList.fromDefault();
   static bool seguroCargado = false;
+
+  late AppLocalizations diccionary;
+
 
   Future<void> actualizarData () async{
 
@@ -74,7 +80,9 @@ class _PageSeguroState extends State<PageSeguro> {
   @override
   Widget build(BuildContext context) {
 
-  
+    final LanguajeProvider lang = Provider.of<LanguajeProvider>(context,listen: false);
+    diccionary = AppLocalizations(lang.getLanguaje);
+
     return BlocProvider(
       create: (context)=>SeguroBloc(),
       child: BlocListener<SeguroBloc, SeguroState>(
@@ -121,7 +129,7 @@ class _PageSeguroState extends State<PageSeguro> {
               child: Scaffold(
                 body: Stack(
                   children: [          
-                    EncabezadoPages(titulo: "Seguros"),            
+                    EncabezadoPages(titulo: diccionary.dictionary(Strings.pageSeguroTitle)),            
                     Container(
                       margin: EdgeInsets.only(top: 100.0),
                       child:  ListView(
