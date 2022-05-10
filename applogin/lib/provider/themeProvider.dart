@@ -31,7 +31,6 @@ class ThemeProvider with ChangeNotifier {
 
   set setTheme(ThemeMode modo){
     _actual = modo;    
-    print(modo.toString());
     AppPreferences.shared.setString(AppPreferences.APP_THEME,modo == ThemeMode.light?"claro":"obscuro");
     notifyListeners();
   }
