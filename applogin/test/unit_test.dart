@@ -11,7 +11,7 @@ void sqfliteTestInit() {
   // Initialize ffi implementation
   sqfliteFfiInit();
   // Set global factory
-  databaseFactory = databaseFactoryFfi;
+ //databaseFactory = databaseFactoryFfi;
 }
 
 void main() {
