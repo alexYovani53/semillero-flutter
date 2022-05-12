@@ -1,4 +1,4 @@
-name: CI-v2
+name: CI
 
 # Controls when the workflow will run
 on:
@@ -22,11 +22,10 @@ jobs:
       FLUTTER_VERSION: "2.10.3"
     steps:
       - working-directory: ./applogin
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
         with:
-          distribution: 'zulu'
-          java-version: '11'
+          java-version: '12'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: $
