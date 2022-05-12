@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:applogin/model/cliente/cliente.dart';
 import 'package:applogin/repository/db_manager.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +9,14 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 
 /// Initialize sqflite for test.
-void sqfliteTestInit() {
+void sqfliteTestInit() async{
   // Initialize ffi implementation
-  sqfliteFfiInit();
+  if (Platform.isWindows || Platform.isLinux) {
+    // Initialize FFI
+    sqfliteFfiInit();
+  }
   // Set global factory
- //databaseFactory = databaseFactoryFfi;
+ databaseFactory = databaseFactoryFfi;
 }
 
 void main() {
