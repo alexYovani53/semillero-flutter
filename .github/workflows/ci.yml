@@ -1,6 +1,11 @@
 name: CI
 on: [push] 
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+defaults:
+  run:
+    working-directory: applogin
+
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -17,8 +22,7 @@ jobs:
           java-version: '12'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "2.10.4"     
-      - run: cd ./applogin     
+          flutter-version: "2.10.4"         
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
