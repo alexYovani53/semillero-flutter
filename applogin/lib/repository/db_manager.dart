@@ -46,8 +46,9 @@ class DbManager{
   }
 
   Future<Database> initDb() async {
-    Directory directoryDb = await getApplicationDocumentsDirectory();
-    String path = '${directoryDb.path}test.db';
+    //Directory directoryDb = await getApplicationDocumentsDirectory();
+    String directoryDb = await getDatabasesPath();
+    String path = '${directoryDb}test.db';
 
     var db = await openDatabase(path, version:1,onCreate: _onCreate);
     return db;
