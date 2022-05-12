@@ -24,11 +24,10 @@ jobs:
       JAVA_VERSION: "11.0"
       FLUTTER_VERSION: "2.10.3"
     steps:
+      - working-directory: ./applogin
       - uses: actions/checkout@v2
-      - run: cd applogin
       - uses: actions/setup-java@v2
         with:
-          distribution: 'zulu'
           java-version: $
       - uses: subosito/flutter-action@v2
         with:
