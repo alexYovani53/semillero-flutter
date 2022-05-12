@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:applogin/model/cliente/cliente.dart';
+import 'package:applogin/model/seguro/seguro.dart';
 import 'package:applogin/repository/cliente_repository.dart';
 import 'package:applogin/repository/db_manager.dart';
+import 'package:applogin/repository/seguro_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
@@ -55,8 +57,8 @@ void main() {
       "nombreVia": "a"
     };
     
-    
-    await ClienteRepository.shared.save(data: [data], tableName: "cliente");
+    fianl cliente = Cliente.fromServiceSpring(data);
+    await ClienteRepository.shared.save(data: [cliente], tableName: "cliente");
     final result = await ClienteRepository.shared.selectAll(tableName: "cliente");
     print(result.length);
     expect(result.length,0);
@@ -64,7 +66,17 @@ void main() {
 
   
   test('Get all of table seguro', () async {
-    final result = await ClienteRepository.shared.selectAll(tableName: "seguros");
+    final data = {
+      "numeroPoliza": 303,
+      "ramo": "fecha",
+      "fechaInicio": "2022-04-28",
+      "fechaVencimiento": "2022-04-30",
+      "condicionesParticulares": "ffffffffffff",
+      "dniCl": 285      
+    };
+    final seguro = Seguro.fromServiceSpring(data);
+    await SeguroRepository.shared.save(data: [seguro],tableName: "seguros");
+    final result = await SeguroRepository.shared.selectAll(tableName: "seguros");
     print(result.length);
     expect(result.length,0);
   });
