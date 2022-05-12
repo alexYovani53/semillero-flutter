@@ -41,6 +41,22 @@ void main() {
   });
 
   test('Get all of table cliente', () async {
+    final data = {
+      "dniCl": 322,
+      "nombreCl": "alex",
+      "apellido1": "a",
+      "apellido2": "a",
+      "claseVia": "a",
+      "numeroVia": 3,
+      "codPostal": 3,
+      "ciudad": "Guatemala",
+      "telefono": 444,
+      "observaciones": "aaaa",
+      "nombreVia": "a"
+    };
+    
+    
+    await ClienteRepository.shared.save(data: [data], tableName: "cliente");
     final result = await ClienteRepository.shared.selectAll(tableName: "cliente");
     print(result.length);
     expect(result.length,0);
