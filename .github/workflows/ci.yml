@@ -27,8 +27,7 @@ jobs:
           java-version: '12'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: $
-          
+          flutter-version: $          
       - working-directory: ./applogin
       - run: flutter pub get
       - run: flutter analyze
