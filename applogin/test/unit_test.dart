@@ -57,7 +57,7 @@ void main() {
       "nombreVia": "a"
     };
     
-    fianl cliente = Cliente.fromServiceSpring(data);
+    final cliente = Cliente.fromServiceSpring(data);
     await ClienteRepository.shared.save(data: [cliente], tableName: "cliente");
     final result = await ClienteRepository.shared.selectAll(tableName: "cliente");
     print(result.length);
