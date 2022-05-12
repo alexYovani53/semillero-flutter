@@ -18,7 +18,6 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: $          
-      - working-directory: ./applogin
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
