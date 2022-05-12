@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:applogin/model/cliente/cliente.dart';
+import 'package:applogin/repository/cliente_repository.dart';
 import 'package:applogin/repository/db_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -37,6 +38,19 @@ void main() {
     debugPrint(result.path);
 
     expect( result.isOpen, true);
+  });
+
+  test('Get all of table cliente', () async {
+    final result = await ClienteRepository.shared.selectAll(tableName: "cliente");
+    print(result.length);
+    expect(result.length,0);
+  });
+
+  
+  test('Get all of table seguro', () async {
+    final result = await ClienteRepository.shared.selectAll(tableName: "seguros");
+    print(result.length);
+    expect(result.length,0);
   });
 
   test('map customers',(){
