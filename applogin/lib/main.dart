@@ -2,16 +2,11 @@ import 'dart:async';
 import 'package:applogin/bloc/basic_bloc/basic_bloc.dart';
 import 'package:applogin/bloc/bloc_observer/simple_bloc_observer.dart';
 import 'package:applogin/localizations/localizations.dart';
-import 'package:applogin/pages/page_login/PageLogin.dart';
 import 'package:applogin/pages/page_login/page_init.dart';
-import 'package:applogin/pages/page_login/prueba.dart';
-import 'package:applogin/pages/page_setting/page_setting.dart';
 import 'package:applogin/provider/languaje_provider.dart';
 import 'package:applogin/provider/themeProvider.dart';
 import 'package:applogin/repository/db_manager.dart';
 import 'package:applogin/utils/app_themes.dart';
-import 'package:bloc/bloc.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
