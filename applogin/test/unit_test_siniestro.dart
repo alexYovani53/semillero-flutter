@@ -20,6 +20,7 @@ void sqfliteTestInit() async{
   // Set global factory
  databaseFactory = databaseFactoryFfi;
 }
+
 void main(){
 
   sqfliteTestInit();

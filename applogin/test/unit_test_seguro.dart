@@ -20,6 +20,8 @@ void sqfliteTestInit() async{
 }
 
 void main(){
+
+  sqfliteTestInit();
   
   test('Obtener * de tabla seguros', () async {
 
