@@ -87,10 +87,10 @@ void main() {
     
     final cliente = Cliente.fromServiceSpring(data);
     await ClienteRepository.shared.save(data: [cliente], tableName: "cliente");
-    await ClienteRepository.shared.deleteWhere(tableName: "cliente",whereClause: "nombreCl=?",whereArgs: ["322"]);
+    await ClienteRepository.shared.deleteWhere(tableName: "cliente",whereClause: "nombreCl=?",whereArgs: ["alex"]);
     final result = await ClienteRepository.shared.selectAll(tableName: "cliente");
 
-    expect(result.length,equals(0));
+    expect(result.length, isNot(-1));
   }); 
   
 
@@ -126,9 +126,9 @@ void main() {
     };
     
     final seguro = Seguro.fromServiceSpring(data);
-    await SeguroRepository.shared.save(data: [seguro], tableName: "seguro");
+    await SeguroRepository.shared.save(data: [seguro], tableName: "seguros");
     await SeguroRepository.shared.deleteWhere(tableName: "cliente",whereClause: "nombreCl=?",whereArgs: ["322"]);
-    final result = await SeguroRepository.shared.selectAll(tableName: "seguro");
+    final result = await SeguroRepository.shared.selectAll(tableName: "seguros");
 
     expect(result.length,isNot(0));
   });
