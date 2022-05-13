@@ -59,7 +59,7 @@ class ApiSiniestroProvider{
     }else{
       
       print(">>>>>>>>>>>>>>>>>>>>>>> PETICION A LOCAL");
-       final response = await SiniestroRepository.shared.save(data: [SiniestroNuevo], tableName:"cliente");
+       final response = await SiniestroRepository.shared.save(data: [SiniestroNuevo], tableName:"siniestros");
        return true;
     }                       
 
