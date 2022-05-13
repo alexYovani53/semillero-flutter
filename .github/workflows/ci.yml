@@ -26,3 +26,5 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter test test/unit_test_siniestro.dart
+      - run: flutter test test/unit_test_cliente.dart
+      - run: flutter test test/unit_test_seguro.dart
