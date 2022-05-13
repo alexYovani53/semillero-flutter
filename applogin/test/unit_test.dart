@@ -172,4 +172,81 @@ void main() {
 
 
 
+test('Mapear objeto a modelo siniestro',(){
+    final data = {
+        "idSiniestro": 143,
+        "fechaSiniestro": "2022-03-10T00:00:00.000+00:00",
+        "causas": "Incendio",
+        "aceptado": "no",
+        "indemnizacion": 15000,
+        "numeroPoliza": 303,
+        "dniPerito": 67
+    };
+
+    final siniestro = Siniestro.fromServiceSpring(data);
+    expect(siniestro.fechaSiniestro,equals(DateTime.parse("2022-03-10T00:00:00.000+00:00")));
+
+
+  });
+
+  
+  test('Obtener * de tabla siniestros', () async {
+
+    final data = {
+      "idSiniestro": 143,
+      "fechaSiniestro": "2022-03-10T00:00:00.000+00:00",
+      "causas": "Incendio",
+      "aceptado": "no",
+      "indemnizacion": 15000,
+      "numeroPoliza": 303,
+      "dniPerito": 67
+    };
+    
+    final siniestro = Siniestro.fromServiceSpring(data);
+    await SiniestroRepository.shared.save(data: [siniestro], tableName: "siniestros");
+    final result = await SiniestroRepository.shared.selectAll(tableName: "siniestros");
+
+    expect(result.length,isNot(0));
+  });
+
+
+  test('Eliminar de tabla siniestros', () async {
+    final data = {
+      "idSiniestro": 143,
+      "fechaSiniestro": "2022-03-10T00:00:00.000+00:00",
+      "causas": "Incendio",
+      "aceptado": "no",
+      "indemnizacion": 15000,
+      "numeroPoliza": 303,
+      "dniPerito": 67
+    };
+    
+    final siniestro = Siniestro.fromServiceSpring(data);
+    await SiniestroRepository.shared.save(data: [siniestro], tableName: "siniestros");
+    await SiniestroRepository.shared.deleteWhere(tableName: "siniestros",whereClause: "numeroPoliza=?",whereArgs: ["303"]);
+    final result = await SiniestroRepository.shared.selectAll(tableName: "siniestros");
+
+    expect(result.length,equals(0));
+  }); 
+  
+    test('Eliminar de tabla siniestros ApiProvider', () async {
+    MyApp.connected = false;
+    final data = {
+      "idSiniestro": 143,
+      "fechaSiniestro": "2022-03-10T00:00:00.000+00:00",
+      "causas": "Incendio",
+      "aceptado": "no",
+      "indemnizacion": 15000,
+      "numeroPoliza": 303,
+      "dniPerito": 67
+    };
+    
+    await ApiSiniestroProvider.shared.guardarSiniestro(data);
+    await SiniestroRepository.shared.deleteWhere(tableName: "siniestros",whereClause: "numeroPoliza=?",whereArgs: ["303"]);
+    final result = await SiniestroRepository.shared.selectAll(tableName: "siniestros");
+
+    expect(result.length,equals(0));
+  }); 
+
+
 }
