@@ -29,10 +29,26 @@ import 'package:open_settings/open_settings.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 class PageLogin extends StatefulWidget {
-  const PageLogin() : super();
+  
+  PageLogin() : super();
 
   @override
   State<PageLogin> createState() => _PageLoginState();
+
+  final keys =  encriptador.Key.fromUtf8("12345678901234567890123456789012");
+  final iv = encriptador.IV.fromLength(16);
+  String encrypt(String text ){    
+    final encrypter = encriptador.Encrypter(encriptador.AES(keys));
+    final encryptedData = encrypter.encrypt(text,iv: iv);
+    return encryptedData.base64;
+  }
+
+  String decrypt(String text ){    
+    final encrypter = encriptador.Encrypter(encriptador.AES(keys));
+    final decryptedData = encrypter.decrypt(encriptador.Encrypted.fromBase64(text),iv: iv);
+    return decryptedData;
+  }
+
 }
 
 class _PageLoginState extends State<PageLogin> {
@@ -42,8 +58,7 @@ class _PageLoginState extends State<PageLogin> {
   final formKey = GlobalKey<FormState>();  
   final controllerCorreo = TextEditingController();
   final controllerContrasena = TextEditingController();    
-  final keys =  encriptador.Key.fromUtf8("12345678901234567890123456789012");
-  final iv = encriptador.IV.fromLength(16);
+ 
 
   late AppLocalizations diccionary;
   
@@ -284,7 +299,7 @@ class _PageLoginState extends State<PageLogin> {
           
           authenticateBiometrics().then((statusOk){
             if(statusOk){
-              final decryptedPass = decrypt(password);
+              final decryptedPass = widget.decrypt(password);
               controllerContrasena.text = decryptedPass;
             }
           });
@@ -328,7 +343,7 @@ class _PageLoginState extends State<PageLogin> {
       return;
     }
 
-    final passwordEncrypted = encrypt(controllerContrasena.text);
+    final passwordEncrypted = widget.encrypt(controllerContrasena.text);
     showFlushBar(passwordEncrypted,"Contraseña Encriptada");
 
     SharedPreferences.getInstance().then(
@@ -341,17 +356,7 @@ class _PageLoginState extends State<PageLogin> {
   }
 
 
-  String encrypt(String text ){    
-    final encrypter = encriptador.Encrypter(encriptador.AES(keys));
-    final encryptedData = encrypter.encrypt(text,iv: iv);
-    return encryptedData.base64;
-  }
 
-  String decrypt(String text ){    
-    final encrypter = encriptador.Encrypter(encriptador.AES(keys));
-    final decryptedData = encrypter.decrypt(encriptador.Encrypted.fromBase64(text),iv: iv);
-    return decryptedData;
-  }
 
 
   Future<void> ejecutarLogin(String correoLog, String password, Bloc blocPrincipal) async {

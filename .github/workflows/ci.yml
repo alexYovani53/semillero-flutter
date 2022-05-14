@@ -28,3 +28,4 @@ jobs:
       - run: flutter test test/unit_test_siniestro.dart
       - run: flutter test test/unit_test_cliente.dart
       - run: flutter test test/unit_test_seguro.dart
+      - run: flutter test test/unit_test_login.dart

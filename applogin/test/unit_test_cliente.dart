@@ -171,6 +171,27 @@ void main(){
       }
     );
 
+    test("bloc cliente evento ver cliente",()async {
+        final data = {
+          "dniCl": 11,
+          "nombreCl": "alex",
+          "apellido1": "a",
+          "apellido2": "a",
+          "claseVia": "a",
+          "numeroVia": 3,
+          "codPostal": 3,
+          "ciudad": "Guatemala",
+          "telefono": 444,
+          "observaciones": "aaaa",
+          "nombreVia": "a"
+        };
+      
+        final cliente = Cliente.fromServiceSpring(data);
+        bloc.add(VerClienteEvent(client: cliente));
+        expect(bloc.state,VerClienteState(client: cliente));
+      }
+    );
+
     
   
 
