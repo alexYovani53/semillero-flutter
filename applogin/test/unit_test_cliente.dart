@@ -188,7 +188,9 @@ void main(){
       
         final cliente = Cliente.fromServiceSpring(data);
         bloc.add(VerClienteEvent(client: cliente));
-        expect(bloc.state,VerClienteState(client: cliente));
+        await Future.delayed(const Duration(seconds: 2),(){
+          expect(bloc.state,VerClienteState(client: cliente));
+        });
       }
     );
 
