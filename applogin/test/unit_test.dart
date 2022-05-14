@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:applogin/bloc/basic_bloc/basic_bloc.dart';
+import 'package:applogin/bloc/cliente_bloc/cliente_bloc.dart';
+import 'package:applogin/main.dart';
+import 'package:applogin/model/cliente/cliente.dart';
 import 'package:applogin/provider/api_local_auth.dart';
+import 'package:applogin/repository/cliente_repository.dart';
 import 'package:applogin/repository/db_manager.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
@@ -48,18 +52,39 @@ void main() {
 
   
   
-  group("block", (){
+  group("bloc ", (){
 
     blocTest(
-      "description", 
+      "bloc  --> evento ButtonPressedEvent", 
       build: ()=>BasicBloc(),
       act:(BasicBloc bloc)=> bloc.add(ButtonPressedEvent()),
-      expect: ()=>[isA<LogExitosoState>()],
+      expect: ()=>[LogExitosoState(logeado: true, title: "Hola mundo")],
     );
+
+
+    blocTest(
+      "bloc  --> evento LoginEvent", 
+      build: ()=>BasicBloc(),
+      act:(BasicBloc bloc)=> bloc.add(LoginEvent(data: "AlexYovani")),
+      expect: ()=>[LogExitosoState(logeado: true, title:"AlexYovani")],
+
+    );
+
+    blocTest(
+      "bloc  --> evento LogOutEvent", 
+      build: ()=>BasicBloc(),
+      act:(BasicBloc bloc)=> bloc.add(LogOutEvent()),
+      expect: ()=>[LogOutState(logeado: false)],
+
+    );
+
+    debugPrint("Finalizado");
+    
 
   }); 
 
 
+ 
 
 
 }

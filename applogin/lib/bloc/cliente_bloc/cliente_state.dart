@@ -1,13 +1,22 @@
 
 part of 'cliente_bloc.dart';
 
-abstract class ClienteState {}
+abstract class ClienteState extends Equatable{}
 
-class Inicio extends ClienteState{}
+class InicioClienteState extends ClienteState{
+  @override
+  List<Object?> get props => [];
+}
 
-class InitialClientState extends ClienteState{}
+class InitialClientState extends ClienteState{
+  @override
+  List<Object?> get props => [];
+}
 
-class AgregarClientState extends ClienteState{}
+class AgregarClientState extends ClienteState{
+  @override
+  List<Object?> get props => [];
+}
 
 class EliminarClienteState extends ClienteState{
     final int dniCl;
@@ -20,7 +29,10 @@ class EliminarClienteState extends ClienteState{
   
 }
 
-class RegresarAPageState extends ClienteState{}
+class RegresarAPageState extends ClienteState{
+  @override
+  List<Object?> get props => [];
+}
 
 class VerClienteState extends ClienteState{
   
