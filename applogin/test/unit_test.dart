@@ -9,6 +9,7 @@ import 'package:applogin/repository/db_manager.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -84,7 +85,41 @@ void main() {
   }); 
 
 
- 
+  test('Can Create Preferences', () async{
+
+    SharedPreferences.setMockInitialValues({
+      "key": "value"
+    }); //set values here
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    bool working = false;
+    String name = 'john';
+    pref.setBool('working', working);
+    pref.setString('name', name);
+
+
+    expect(pref.getBool('working'), false);
+    expect(pref.getString('name'), 'john');
+  });
 
 
 }
+
+/*
+void main(){
+  SharedPreferences? preference;
+  LocalDataSourceImp? localStorage ;
+
+setUp(() async{
+  preference =  await SharedPreferences.getInstance();
+  localStorage = LocalDataSourceImp(preference!);
+  SharedPreferences.setMockInitialValues({});
+});
+
+final token = TokenModel(data: "babakoto");
+
+test("cache Token ", ()async{
+  localStorage!.cacheToken(token);
+  final result = preference!.getString(TOKEN);
+  expect(result, json.encode(token.toJson()));
+});
+}*/

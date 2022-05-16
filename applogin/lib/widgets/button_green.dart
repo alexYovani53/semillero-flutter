@@ -44,7 +44,10 @@ class ButtonGreen extends StatelessWidget {
         ),
         child: Center(
           child: Text(
+            
             texto,
+        
+      key: const Key("button"),
             style:TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,

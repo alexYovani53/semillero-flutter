@@ -10,6 +10,7 @@ class LanguajeProvider with ChangeNotifier{
     final String? savedCodeLanguaje = await AppPreferences.shared.getString(AppPreferences.APP_LANGUAJE);
     print(savedCodeLanguaje);
     if(savedCodeLanguaje != null){
+      _locale = Locale(savedCodeLanguaje);
       return Locale(savedCodeLanguaje);
     }else{
       _locale = Locale(Platform.localeName.substring(0,2));

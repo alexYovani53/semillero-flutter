@@ -10,15 +10,17 @@ class ThemeProvider with ChangeNotifier {
   Future<ThemeMode> getInitTheme() async {
     final String? savedTheme = await AppPreferences.shared.getString(AppPreferences.APP_THEME);
     if(savedTheme != null){
-      
-    print(savedTheme);
       if (savedTheme == "claro"){
+        _actual=ThemeMode.light;
         return ThemeMode.light;
       }else{
+        _actual=ThemeMode.dark;
         return ThemeMode.dark;
       }
     }
 
+    
+    _actual=ThemeMode.light;
     return ThemeMode.light;
   }
 

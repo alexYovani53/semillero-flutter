@@ -52,14 +52,14 @@ class _MyAppState extends State<MyApp> {
   LanguajeProvider langProvider = LanguajeProvider();
 
   Future<void> initiliazeFB() async{
+    await initthemeconfig();
+    await initlanguajeconfig();
     await Firebase.initializeApp();
     await initiliazeCrashlytics();
     await initiliazeRemoteConfig();
     await initiliazeCloudMessage();
     await initializeRealTime();
     await DbManager.shared.deleteDb();  
-    await initthemeconfig();
-    await initlanguajeconfig();
   }
 
   Future<void> initthemeconfig() async{
@@ -104,9 +104,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initiliazeCloudMessage() async{
     FirebaseMessaging cloudMessagin = FirebaseMessaging.instance;
-
     String token = await cloudMessagin.getToken()??"";
-      print(token);
 
     FirebaseMessaging.onMessage.listen((event) {
         print(event.notification!.title);

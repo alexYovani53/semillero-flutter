@@ -177,9 +177,21 @@ class _PageLoginState extends State<PageLogin> {
                         fontWeight: FontWeight.bold
                       ),
                     ),
-                    TextInputCustom(inputType: TextInputType.emailAddress, hintText: "you@example.com", validator: validarCorreo,controller: controllerCorreo, icono: Icons.mail,),
+                    TextInputCustom(
+                      key: const Key('inputEmail'),
+                      inputType: TextInputType.emailAddress, 
+                      hintText: "you@example.com", 
+                      validator: validarCorreo,
+                      controller: controllerCorreo, 
+                      icono: Icons.mail,),
 
-                    TextInputCustom(inputType: TextInputType.text, hintText: localizations.dictionary(Strings.loginPassword), validator: validarContrasena,controller: controllerContrasena,icono: Icons.password),
+                    TextInputCustom(
+                      key: const Key('inputPass'),
+                      inputType: TextInputType.text, 
+                      hintText: localizations.dictionary(Strings.loginPassword), 
+                      validator: validarContrasena,
+                      controller: controllerContrasena,
+                      icono: Icons.password),
                     
 
 
