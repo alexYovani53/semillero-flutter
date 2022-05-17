@@ -100,10 +100,10 @@ void main() {
     await tester.pumpWidget(const MyApp());  
   });
 
-  setUpAll(() async{ 
-    await Firebase.initializeApp();
+  // setUpAll(() async{ 
+  //   await Firebase.initializeApp();
 
-  });
+  // });
   // testWidgets("Login", (WidgetTester tester) async {
   //   //await Firebase.initializeApp();
     
