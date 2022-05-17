@@ -32,6 +32,7 @@ import 'package:applogin/widgets/cupertino_bar.dart';
 import 'package:applogin/widgets/encabezado_pages.dart';
 import 'package:applogin/widgets/gradient_back.dart';
 import 'package:applogin/widgets/text_input_custom.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,8 +45,12 @@ import 'package:provider/provider.dart';
 void main() {
 
   setUpAll(() async{ 
-    TestWidgetsFlutterBinding.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+      if (true) {
+        FirebaseFirestore.instance.settings = const Settings(
+            host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
+      }
 
   });
 
