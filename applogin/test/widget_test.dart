@@ -341,7 +341,7 @@ void main() {
     await tester.pumpWidget( createWidgetForTesting( child: SiniestroData(siniestro: siniestro)));
     await tester.pumpAndSettle();
 
-    expect(find.text("Incendio"), findsNWidgets(2));
+    expect(find.text("Incendio"), findsNWidgets(1));
     expect(find.text("no"), findsNWidgets(1));
     expect(find.text("15000"), findsNWidgets(1));
   });
