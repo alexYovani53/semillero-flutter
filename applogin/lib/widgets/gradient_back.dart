@@ -30,10 +30,11 @@ class GradientBack extends StatelessWidget {
     } 
 
     return Container(
+      key: const Key("background"),
       height: height,
       decoration: BoxDecoration(
         gradient:  LinearGradient(
-            stops: [
+            stops: const [
                     0.50, 
                     0.99, 
                     ],
@@ -65,6 +66,7 @@ class GradientBack extends StatelessWidget {
 
   Widget backGround(double screenHeight, double screenWidth){
     return Container(
+      key: const Key("background"),
       height: screenHeight,
       width: screenWidth,
       child: Stack(

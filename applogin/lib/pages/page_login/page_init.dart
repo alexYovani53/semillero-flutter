@@ -10,8 +10,7 @@ class PageInit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BasicBloc,BasicState>(
-      builder: (context,state){
-        
+      builder: (context,state){        
         if (state.isLogeado){
           return CuppertinoBar();
         }else{

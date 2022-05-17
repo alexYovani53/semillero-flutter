@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class EncabezadoPages  extends StatelessWidget {
 
-  String titulo = "Clientes";
+  String titulo;
 
   EncabezadoPages ({
     Key? key,
@@ -22,9 +22,9 @@ class EncabezadoPages  extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-        final ThemeProvider theme =Provider.of<ThemeProvider>(context);
+    final ThemeProvider theme =Provider.of<ThemeProvider>(context);
     final BasicBloc bloc = BlocProvider.of<BasicBloc>(context);
-    final realtime = RealTimeRepository();
+    // final realtime = RealTimeRepository();
   
     return Stack(
         children: [
@@ -89,11 +89,11 @@ class EncabezadoPages  extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Text(
-                  'There are no bottons to push :)',
+                Text(
+                  titulo,
                 ),
-                new Text(
-                  'Just turn off your internet.',
+                Text(
+                  "hooa"
                 ),
               ],
           )

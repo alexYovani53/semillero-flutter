@@ -1,6 +1,4 @@
 
-import 'package:applogin/model/cliente/cliente.dart';
-import 'package:applogin/model/cliente/cliente_list.dart';
 import 'package:applogin/provider/api_manager.dart';
 import 'package:applogin/utils/app_type.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +22,10 @@ class PageDAta extends StatelessWidget {
 
             case ConnectionState.active:
             case ConnectionState.done:
-            default:              
-              print(snapshot);
-
+            default:             
               if (snapshot.hasData){
                 final  client = snapshot.requireData;
-                print(client);
               }
-              
-              print('no tiene data');
               return Container();
           }
 

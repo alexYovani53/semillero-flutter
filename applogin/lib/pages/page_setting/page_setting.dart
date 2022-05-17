@@ -24,6 +24,7 @@ class _PageSettingState extends State<PageSetting> {
 
   late List<String> items = ["English","Español"];
   String? selectedItem ;
+  String? selectedTheme ;
   bool estado = false;
   
   @override
@@ -36,7 +37,7 @@ class _PageSettingState extends State<PageSetting> {
 
 
     final ThemeProvider theme =Provider.of<ThemeProvider>(context);
-    String SelectedTheme = theme.getTheme == ThemeMode.light? diccionary.dictionary(Strings.settingLight): diccionary.dictionary(Strings.settingDark);
+    selectedTheme = theme.getTheme == ThemeMode.light? diccionary.dictionary(Strings.settingLight): diccionary.dictionary(Strings.settingDark);
 
     return Scaffold(
       backgroundColor: theme.getTheme == ThemeMode.light? Color(0XFF7A9BEE): Color.fromARGB(255, 47, 60, 92),
@@ -152,7 +153,8 @@ class _PageSettingState extends State<PageSetting> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              InkWell(
+                              InkWell(                                
+                                key: const Key("Light"),
                                 onTap: () async {
                                   await changeTheme("Light", context);
                                 },
@@ -177,7 +179,7 @@ class _PageSettingState extends State<PageSetting> {
                                 height: 40.0,
                                 child: Center(
                                   child: Text(
-                                    SelectedTheme,
+                                    selectedTheme!,
                                     style: const TextStyle(
                                     color: Color.fromARGB(255, 0, 0, 0),
                                     fontFamily: 'Montserrat',
@@ -186,6 +188,7 @@ class _PageSettingState extends State<PageSetting> {
                                 ),
                               ),
                               InkWell(
+                                key: const Key("Dark"),
                                 onTap: () async {
                                   await changeTheme("Dark", context);
                                 },
@@ -324,8 +327,6 @@ class _PageSettingState extends State<PageSetting> {
 
   Future<void> changeTheme(String themeString, BuildContext context) async {
 
-    print(themeString);
-
     ThemeMode temaActual = await ThemeProvider().getInitTheme();
     switch (themeString) {
       case "Claro":
@@ -343,8 +344,6 @@ class _PageSettingState extends State<PageSetting> {
 
     final themeChange = Provider.of<ThemeProvider>(context,listen:false);
     themeChange.setTheme = temaActual;
-
-
   }
 
   Future<void> changeLang(String langstring ) async {
