@@ -47,10 +47,13 @@ void main() {
   setUpAll(() async{ 
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-      if (true) {
-        FirebaseFirestore.instance.settings = const Settings(
-            host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
-      }
+    if (true) {
+      FirebaseFirestore.instance.settings = const Settings(
+          host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
+    }
+
+    runApp(MyApp());
+
 
   });
 
