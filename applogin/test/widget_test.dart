@@ -13,6 +13,7 @@ import 'package:applogin/model/seguro/seguro.dart';
 import 'package:applogin/model/seguro/seguro_list.dart';
 import 'package:applogin/model/siniestro/siniestro.dart';
 import 'package:applogin/model/siniestro/siniestro_list.dart';
+import 'package:applogin/pages/page_client/add_client.dart';
 import 'package:applogin/pages/page_client/client_data.dart';
 import 'package:applogin/pages/page_client/client_view.dart';
 import 'package:applogin/pages/page_client/list_client.dart';
@@ -35,6 +36,7 @@ import 'package:applogin/widgets/text_input_custom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,18 +46,31 @@ import 'package:provider/provider.dart';
 
 void main() {
 
-  setUpAll(() async{ 
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-    if (true) {
-      FirebaseFirestore.instance.settings = const Settings(
-          host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
-    }
+    // setUpAll((){
+    //   TestWidgetsFlutterBinding.ensureInitialized();
+    // runApp(MyApp());
+    // });
+  
+  // const MethodChannel channel = MethodChannel('plugins.flutter.io/firebase_core');
 
-    runApp(MyApp());
+  // setUpAll(() async{ 
+
+  //   channel.setMockMethodCallHandler((MethodCall methodCall) async {
+  //     return '42';
+  //   });
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   await Firebase.initializeApp();
+  //   // if (true) {
+  //   //   FirebaseFirestore.instance.settings = const Settings(
+  //   //       host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
+  //   // }
+
+  //   runApp(MyApp());
 
 
-  });
+  // });  tearDown(() {
+  //   channel.setMockMethodCallHandler(null);
+  // });
 
   Widget createWidgetForTesting({Widget? child}){
     return MaterialApp(
@@ -104,7 +119,8 @@ void main() {
                
             },
           ),
-        );  
+          );  
+      
   }
 
 
@@ -118,20 +134,14 @@ void main() {
     
   //   await tester.pumpWidget( createWidgetForTesting2(child_: PageLogin()));
 
-  //   final textCorreo = find.byKey(const Key("inputEmail"));
-  //   final textPass = find.byKey(const Key("inputPass"));
+  //   await tester.pump(Duration(seconds: 5));
+
+  //   final textCorreo = find.byKey(const Key("inputEmail"),skipOffstage: false);
+  //   final textPass = find.byKey(const Key("inputPass"),skipOffstage: false);
 
   //   await tester.ensureVisible(textCorreo);
   //   await tester.tap(textCorreo);
   //   await tester.enterText(textCorreo, "alexYovani53@gmail.com");
-
-    
-  //   await tester.ensureVisible(textPass);
-  //   await tester.tap(textPass);
-  //   await tester.enterText(textPass, "1234");
-
-  //   TextFormField email = tester.firstWidget(textCorreo);
-  //   expect(email.controller!.text,"alexYovani53@gmail.com");
 
   // });
 
@@ -365,8 +375,70 @@ void main() {
     expect(buttonDark, findsOneWidget);
     expect(buttonLight,findsOneWidget);
 
+    await tester.ensureVisible(buttonDark);
     await tester.tap(buttonDark,pointer: 1);
     expect(find.text("Claro"), findsOneWidget);
+
+  });
+
+  testWidgets("Agregar cliente", (WidgetTester tester)async{
+    await tester.pumpWidget(createWidgetForTesting2(child_: BlocProvider(
+          create: (context)=> BasicBloc(),
+          child: BlocBuilder<BasicBloc,BasicState>(
+            builder: (context, state) {
+              return AddClient();
+            },
+          ),
+        ) ));
+  
+    final data = find.byType(AddClient);
+
+    expect(data, findsOneWidget);
+    expect(find.byType(TextFormField), findsNWidgets(10));
+
+    final textNombre =find.byKey(const Key("nombre"));
+    await tester.tap(textNombre);
+    await tester.enterText(textNombre,"Juanito");
+
+    final TextInputCustom textNombre_ = tester.firstWidget(textNombre);
+
+    expect(textNombre_.controller.text,"Juanito");
+
+  });
+
+  testWidgets("Editar cliente", (WidgetTester tester)async{
+
+    final data = {
+      "dniCl": 11,
+      "nombreCl": "alex",
+      "apellido1": "a",
+      "apellido2": "a",
+      "claseVia": "a",
+      "numeroVia": 3,
+      "codPostal": 3,
+      "ciudad": "Guatemala",
+      "telefono": 444,
+      "observaciones": "aaaa",
+      "nombreVia": "a"
+    };
+
+    final cliente = Cliente.fromServiceSpring(data);
+
+
+    await tester.pumpWidget(createWidgetForTesting2(child_: BlocProvider(
+          create: (context)=> BasicBloc(),
+          child: BlocBuilder<BasicBloc,BasicState>(
+            builder: (context, state) {
+              return AddClient(clientEdit: cliente);
+            },
+          ),
+        ) ));
+  
+    expect(find.byType(TextFormField), findsNWidgets(10));
+
+    final textNombre =find.byKey(const Key("nombre"));
+    final TextInputCustom textNombre_ = tester.firstWidget(textNombre);
+    expect(textNombre_.controller.text,"alex");
 
   });
 

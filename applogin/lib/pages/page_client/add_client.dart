@@ -71,7 +71,7 @@ class _AddClientState extends State<AddClient> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
 
-                TextInputCustom(inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteNombre),controller: controllerNombre, icono: Icons.mail , validator: (String data){
+                TextInputCustom(key: const Key("nombre"),inputType: TextInputType.text, hintText: dictionary.dictionary(Strings.formClienteNombre),controller: controllerNombre, icono: Icons.mail , validator: (String data){
                     if(data.isEmpty){
                       return dictionary.dictionary(Strings.formClienteValidatorNombre);
                     } return null;
