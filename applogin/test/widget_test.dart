@@ -43,6 +43,11 @@ import 'package:provider/provider.dart';
 
 void main() {
 
+  setUpAll(() async{ 
+    TestWidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+
+  });
 
   Widget createWidgetForTesting({Widget? child}){
     return MaterialApp(
@@ -100,10 +105,6 @@ void main() {
     await tester.pumpWidget(const MyApp());  
   });
 
-  // setUpAll(() async{ 
-  //   await Firebase.initializeApp();
-
-  // });
   // testWidgets("Login", (WidgetTester tester) async {
   //   //await Firebase.initializeApp();
     
@@ -343,7 +344,7 @@ void main() {
 
     expect(find.text("Incendio"), findsNWidgets(1));
     expect(find.text("no"), findsNWidgets(1));
-    expect(find.text("15000"), findsNWidgets(1));
+    expect(find.text("Q. 15000"), findsNWidgets(1));
   });
 
   testWidgets("Setting theme", (WidgetTester tester)async{
