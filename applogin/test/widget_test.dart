@@ -439,7 +439,6 @@ void main() {
     final textNombre =find.byKey(const Key("nombre"));
     final TextInputCustom textNombre_ = tester.firstWidget(textNombre);
     expect(textNombre_.controller.text,"alex");
-
   });
 
 
